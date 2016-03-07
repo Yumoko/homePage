@@ -1,0 +1,125 @@
+@import url(https://fonts.googleapis.com/css?family=Josefin+Sans);
+
+body {
+	background-image: url(/images/bg.png);
+	background-repeat: repeat;
+	background-color: darkslategray;
+	margin: 0;
+	font-family: 'Josefin Sans', sans-serif;
+}
+
+#page {
+	margin-top: 1.5em;
+	background-color: rgba(250, 250, 250, 0.6);
+}
+
+h1 {
+	font-size: 50px;
+	border-radius: 5px;
+	background-color: rgba(205, 205, 205, 0.8);
+	padding: 0.5em;
+	margin: 0;
+}
+
+p {
+	font-size: 18px;
+}
+
+#gallery h2 {
+	padding: 10px;
+	border-top: 1px solid silver;
+	border-bottom: 1px solid silver;
+}
+
+#coverImg {
+	/*border: 1px solid black;*/
+	background-image: url(/images/CatOil.png);
+	background-position: top right;
+	background-repeat: no-repeat;
+	height: 280px;
+}
+
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: tomato;
+/*	position: fixed;
+	top: 0;
+	width: 100%;*/
+}
+
+li {
+	float: left;
+}
+
+li a {
+	font-size: 20px;
+	display: inline-block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+li a:hover {
+	background-color: firebrick;
+}
+
+
+#gallery {
+	/*border: 1px solid black;*/
+	/*overflow: auto;*/
+	/*margin: auto;*/
+	/*width: 100%;*/
+	text-align: center;
+	padding: 2em;
+	background-color: white;
+	margin: 1em 2em;
+	border-radius: 5px;
+	box-shadow: 1px 1px 2px darkslategray;
+}
+
+.entry {
+	display: inline-block;
+	width: 250px;
+	/*float: left;*/
+	/*background-color: gold;*/
+	margin: 0.5em 0;
+	height: 250px;
+	
+}
+
+figure {
+	display: block;
+	width: 240px;
+	height: 250px;
+	margin: auto;
+	border: 1px solid grey;
+}
+
+figure img {
+	padding-top: 5px;
+	width: 210px;
+	height: 210px;
+}
+
+figcaption {
+	font-size: 20px;
+	padding : 2.5px;
+	color: aliceblue;
+	background-color: rosybrown;
+	
+}
+
+#about {
+	text-align: center;
+	padding: 2em;
+	background-color: rgba(240,255,240, 0.9);
+}
+
+footer {
+	/*clear: left;*/
+	bottom: 0;
+}
