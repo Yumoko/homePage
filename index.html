@@ -1,68 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-  <head>
-  	<title>Website</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
-  <body>
-    <div id="page">
-      <header>
-        <h1>Website's Title</h1>
-        <div id="coverImg"></div>
-        
-        <nav>
-          <ul>
-            <li><a href="#coverImg">Top</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#about">About</a></li>
-          </ul>
-        </nav>
-      </header>
 
-<!-- Gallery -->
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Website</title>
+  <script type="text/javascript" src="/js/homePage.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" href="/fonts/font-awesome-4.5.0/css/font-awesome.min.css">
+</head>
 
-      <div id="gallery">
-        <h2>Gallery</h2>
-        <div class="entry">
-          <figure>
-            <img src="images/WatercolourS.jpg" />
-            <figcaption>Watercolour</figcaption>
-          </figure>
-        </div>
+<body>
+  <a name="top" id="top"></a>
 
-        <div class="entry">
-          <figure>
-            <img src="images/SketchingS.jpg" />
-            <figcaption>Drawing and Sketching</figcaption>
-          </figure>
-        </div>
+  <div id="elm-app"></div>
 
-        <div class="entry">
-          <figure>
-            <img src="images/DigitalS.jpg" />
-            <figcaption>Digital painting</figcaption>
-          </figure>
-        </div>
 
-        <div class="entry">
-          <figure>
-            <img src="images/OthersS.jpg" />
-            <figcaption>Others</figcaption>
-          </figure>
-        </div>     
-      </div>
-
-      <div id="about">
-        <h2>About</h2>
-        <div>
-          <p>Born in northeast Taiwan, ...</p>
-        </div>
-      </div>
-
-      <footer>
-        <p>Yu momoko</p>
-      </footer>
-    </div>
-  </body>
+<script type="text/javascript">
+  var elmDiv = document.getElementById('elm-app');
+  var elmApp = Elm.embed(Elm.HomePage, elmDiv);
+</script>
+</body>
 </html>

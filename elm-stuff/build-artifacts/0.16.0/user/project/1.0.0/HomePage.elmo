@@ -1,0 +1,94 @@
+Elm.HomePage = Elm.HomePage || {};
+Elm.HomePage.make = function (_elm) {
+   "use strict";
+   _elm.HomePage = _elm.HomePage || {};
+   if (_elm.HomePage.values) return _elm.HomePage.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Gallery = Elm.Gallery.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $StartApp = Elm.StartApp.make(_elm),
+   $Task = Elm.Task.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var footer$ = A2($Html.footer,_U.list([]),_U.list([A2($Html.p,_U.list([]),_U.list([$Html.text("Yu momoko")]))]));
+   var about = A2($Html.div,
+   _U.list([$Html$Attributes.id("about")]),
+   _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("About")]))
+           ,A2($Html.div,_U.list([]),_U.list([A2($Html.p,_U.list([]),_U.list([$Html.text("Born in northeast Taiwan, ...")]))]))]));
+   var gallery = A2($Html.div,
+   _U.list([$Html$Attributes.id("gallery")]),
+   _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("Gallery")]))
+           ,A2($Html.div,
+           _U.list([$Html$Attributes.$class("entry")]),
+           _U.list([A2($Html.figure,
+           _U.list([]),
+           _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/WatercolourS.jpg")]),_U.list([]))
+                   ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Watercolour")]))]))]))
+           ,A2($Html.div,
+           _U.list([$Html$Attributes.$class("entry")]),
+           _U.list([A2($Html.figure,
+           _U.list([]),
+           _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/SketchingS.jpg")]),_U.list([]))
+                   ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Drawing and Sketching")]))]))]))
+           ,A2($Html.div,
+           _U.list([$Html$Attributes.$class("entry")]),
+           _U.list([A2($Html.figure,
+           _U.list([]),
+           _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/DigitalS.jpg")]),_U.list([]))
+                   ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Digital painting")]))]))]))
+           ,A2($Html.div,
+           _U.list([$Html$Attributes.$class("entry")]),
+           _U.list([A2($Html.figure,
+           _U.list([]),
+           _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/OthersS.jpg")]),_U.list([]))
+                   ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Others")]))]))]))]));
+   var header$ = A2($Html.header,
+   _U.list([]),
+   _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Website\'s Title")]))
+           ,A2($Html.div,_U.list([$Html$Attributes.id("coverImg")]),_U.list([]))
+           ,A2($Html.nav,
+           _U.list([]),
+           _U.list([A2($Html.ul,
+           _U.list([]),
+           _U.list([A2($Html.li,_U.list([]),_U.list([A2($Html.a,_U.list([$Html$Attributes.href("#coverImg")]),_U.list([$Html.text("Top")]))]))
+                   ,A2($Html.li,_U.list([]),_U.list([A2($Html.a,_U.list([$Html$Attributes.href("#gallery")]),_U.list([$Html.text("Gallery")]))]))
+                   ,A2($Html.li,_U.list([]),_U.list([A2($Html.a,_U.list([$Html$Attributes.href("#about")]),_U.list([$Html.text("About")]))]))]))]))]));
+   var page = A2($Html.div,_U.list([$Html$Attributes.id("page")]),_U.list([header$,gallery,about,footer$]));
+   var galleries = _U.list([]);
+   var update = F2(function (action,model) {    return {ctor: "_Tuple2",_0: model,_1: $Effects.none};});
+   var GalleryAction = F2(function (a,b) {    return {ctor: "GalleryAction",_0: a,_1: b};});
+   var timer = function (g) {
+      return A2($Signal.map,function (_p0) {    return A2(GalleryAction,$Basics.snd(g),$Gallery.TimeStep);},$Time.every(3 * $Time.second));
+   };
+   var timers = A2($List.map,timer,galleries);
+   var NoOp = {ctor: "NoOp"};
+   var view = F2(function (address,model) {    return page;});
+   var initialModel = _U.list([]);
+   var app = $StartApp.start({init: {ctor: "_Tuple2",_0: initialModel,_1: $Effects.none},view: view,update: update,inputs: timers});
+   var main = app.html;
+   var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",app.tasks);
+   return _elm.HomePage.values = {_op: _op
+                                 ,initialModel: initialModel
+                                 ,view: view
+                                 ,NoOp: NoOp
+                                 ,GalleryAction: GalleryAction
+                                 ,update: update
+                                 ,timer: timer
+                                 ,timers: timers
+                                 ,app: app
+                                 ,main: main
+                                 ,galleries: galleries
+                                 ,page: page
+                                 ,header$: header$
+                                 ,gallery: gallery
+                                 ,about: about
+                                 ,footer$: footer$};
+};

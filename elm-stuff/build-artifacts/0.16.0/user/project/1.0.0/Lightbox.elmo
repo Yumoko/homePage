@@ -1,0 +1,186 @@
+Elm.Lightbox = Elm.Lightbox || {};
+Elm.Lightbox.make = function (_elm) {
+   "use strict";
+   _elm.Lightbox = _elm.Lightbox || {};
+   if (_elm.Lightbox.values) return _elm.Lightbox.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Date = Elm.Date.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Streams = Elm.Streams.make(_elm);
+   var _op = {};
+   var messageOn = F3(function (name,addr,msg) {
+      return A3($Html$Events.on,name,$Json$Decode.value,function (_p0) {    return A2($Signal.message,addr,msg);});
+   });
+   var onLoad = messageOn("load");
+   var myStyle = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "animation",_1: "fadein 2s"}]));
+   var update = F2(function (action,model) {
+      var _p1 = action;
+      switch (_p1.ctor)
+      {case "NoOp": return model;
+         case "Left": return _U.update(model,{pictures: $Streams.left(function (_) {    return _.pictures;}(model))});
+         case "Right": return _U.update(model,{pictures: $Streams.right(function (_) {    return _.pictures;}(model))});
+         case "Display": return _U.update(model,{display: $Basics.not(function (_) {    return _.display;}(model))});
+         case "Close": return _U.update(model,{display: false});
+         case "Diaporama": return _U.update(model,{diaporama: $Basics.not(function (_) {    return _.diaporama;}(model))});
+         case "OpenDiapo": return _U.update(model,{diaporama: true,display: true});
+         case "GoTo": return _U.update(model,
+           {pictures: A2($Streams.goTo,
+           function (_) {
+              return _.pictures;
+           }(model),
+           function (p) {
+              return _U.eq(function (_) {    return _.filename;}(p),_p1._0);
+           })
+           ,display: true});
+         default: return _U.update(model,
+           {pictures: function (_) {
+              return _.diaporama;
+           }(model) ? $Streams.right(function (_) {    return _.pictures;}(model)) : function (_) {
+              return _.pictures;
+           }(model)});}
+   });
+   var OpenDiapo = {ctor: "OpenDiapo"};
+   var Diaporama = {ctor: "Diaporama"};
+   var TimeStep = {ctor: "TimeStep"};
+   var GoTo = function (a) {    return {ctor: "GoTo",_0: a};};
+   var thumbs = F2(function (address,model) {
+      var thumb = function (n) {
+         return A2($Html.a,
+         _U.list([A2($Html$Events.onClick,address,GoTo(n))]),
+         _U.list([A2($Html.img,
+         _U.list([$Html$Attributes.src(A2($Basics._op["++"],
+         "images/photothèque/",
+         A2($Basics._op["++"],function (_) {    return _.folder;}(model),A2($Basics._op["++"],"/thumbs/",n))))]),
+         _U.list([]))]));
+      };
+      var nameList = function (_) {    return _.nameList;}(model);
+      return A2($Html.div,_U.list([$Html$Attributes.$class("thumbs")]),A2($List.map,thumb,nameList));
+   });
+   var Close = {ctor: "Close"};
+   var Display = {ctor: "Display"};
+   var Right = {ctor: "Right"};
+   var Left = {ctor: "Left"};
+   var NoOp = {ctor: "NoOp"};
+   var onKey = function (address) {
+      var keyToAct = function (key) {    return _U.eq(key,13) || _U.eq(key,39) ? Right : _U.eq(key,37) ? Left : _U.eq(key,27) ? Close : NoOp;};
+      return A2($Html$Events.onKeyDown,address,keyToAct);
+   };
+   var lightbox = F2(function (address,model) {
+      var currentPic = $Streams.current(function (_) {    return _.pictures;}(model));
+      return A2($Html.div,
+      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "lightbox",_1: true}
+                                                  ,{ctor: "_Tuple2",_0: "display",_1: function (_) {    return _.display;}(model)}]))
+              ,onKey(address)
+              ,$Html$Attributes.tabindex(0)
+              ,$Html$Attributes.autofocus(true)]),
+      _U.list([A2($Html.div,
+      _U.list([$Html$Attributes.$class("lightbox-content"),onKey(address),$Html$Attributes.tabindex(0),$Html$Attributes.autofocus(true)]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("picContainer")]),
+              _U.list([A2($Html.img,
+                      _U.list([$Html$Attributes.src(A2($Basics._op["++"],
+                      "images/photothèque/",
+                      A2($Basics._op["++"],
+                      function (_) {
+                         return _.folder;
+                      }(model),
+                      A2($Basics._op["++"],"/",function (_) {    return _.filename;}(currentPic)))))]),
+                      _U.list([]))
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.$class("halfPic"),$Html$Attributes.id("halfPicleft"),A2($Html$Events.onClick,address,Left)]),
+                      _U.list([A2($Html.span,_U.list([$Html$Attributes.$class("noselect")]),_U.list([$Html.text("<<")]))]))
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.$class("halfPic"),$Html$Attributes.id("halfPicright"),A2($Html$Events.onClick,address,Right)]),
+                      _U.list([A2($Html.span,_U.list([$Html$Attributes.$class("noselect")]),_U.list([$Html.text(">>")]))]))]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("lightBoxcaption")]),
+              _U.list([$Html.text(A2($Maybe.withDefault,"",function (_) {    return _.caption;}(currentPic)))
+                      ,A2($Html.a,
+                      _U.list([$Html$Attributes.id("closebtn"),$Html$Attributes.$class("noselect"),A2($Html$Events.onClick,address,Display)]),
+                      _U.list([A2($Html.i,_U.list([$Html$Attributes.$class("fa fa-times")]),_U.list([]))]))
+                      ,A2($Html.a,
+                      _U.list([$Html$Attributes.id("diapoLightbox"),$Html$Attributes.$class("noselect"),A2($Html$Events.onClick,address,Diaporama)]),
+                      _U.list([function (_) {
+                         return _.diaporama;
+                      }(model) ? A2($Html.i,_U.list([$Html$Attributes.$class("fa fa-pause")]),_U.list([])) : A2($Html.i,
+                      _U.list([$Html$Attributes.$class("fa fa-play")]),
+                      _U.list([]))]))
+                      ,A2($Html.a,
+                      _U.list([$Html$Attributes.downloadAs(function (_) {    return _.filename;}(currentPic))
+                              ,$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "downloadHDPic",_1: true}
+                                                                  ,{ctor: "_Tuple2"
+                                                                   ,_0: "displayHDLink"
+                                                                   ,_1: function (_) {
+                                                                      return _.linkHD;
+                                                                   }(currentPic) && function (_) {
+                                                                      return _.display;
+                                                                   }(model)}]))
+                              ,$Html$Attributes.href(A2($Basics._op["++"],
+                              "images/photothèque/",
+                              A2($Basics._op["++"],
+                              function (_) {
+                                 return _.folder;
+                              }(model),
+                              A2($Basics._op["++"],"/hd/",function (_) {    return _.filename;}(currentPic)))))]),
+                      _U.list([$Html.text("Télécharger photo HD")]))]))]))]));
+   });
+   var view = F2(function (address,model) {    return A2($Html.div,_U.list([]),_U.list([A2(thumbs,address,model),A2(lightbox,address,model)]));});
+   var picCaption = F2(function (cs,ps) {
+      var addCaption = function (p) {
+         var caption = function () {
+            var _p4 = $List.head(A2($List.filter,function (_p2) {    var _p3 = _p2;return _U.eq(function (_) {    return _.filename;}(p),_p3._0);},cs));
+            if (_p4.ctor === "Nothing") {
+                  return $Maybe.Nothing;
+               } else {
+                  return $Maybe.Just(_p4._0._1);
+               }
+         }();
+         return _U.update(p,{caption: caption});
+      };
+      return A2($List.map,addCaption,ps);
+   });
+   var Picture = F5(function (a,b,c,d,e) {    return {filename: a,author: b,date: c,caption: d,linkHD: e};});
+   var defPic = A5(Picture,"",$Maybe.Nothing,$Maybe.Nothing,$Maybe.Nothing,false);
+   var picList = function (n) {
+      var go = function (m) {
+         var filename = _U.cmp(n - m,10) < 0 ? A2($Basics._op["++"],"0",A2($Basics._op["++"],$Basics.toString(n - m),".jpg")) : A2($Basics._op["++"],
+         $Basics.toString(n - m),
+         ".jpg");
+         var pic = _U.update(defPic,{filename: filename,caption: $Maybe.Just("")});
+         return _U.eq(m,-1) ? _U.list([]) : A2($List._op["::"],pic,go(m - 1));
+      };
+      return go(n - 1);
+   };
+   var Model = F5(function (a,b,c,d,e) {    return {pictures: a,nameList: b,folder: c,display: d,diaporama: e};});
+   var init = F2(function (pics,folder) {
+      var nameList = A2($List.map,function (_) {    return _.filename;},pics);
+      return A5(Model,A2($Streams.biStream,pics,defPic),nameList,folder,false,false);
+   });
+   return _elm.Lightbox.values = {_op: _op
+                                 ,init: init
+                                 ,update: update
+                                 ,view: view
+                                 ,defPic: defPic
+                                 ,picList: picList
+                                 ,picCaption: picCaption
+                                 ,Picture: Picture
+                                 ,Model: Model
+                                 ,NoOp: NoOp
+                                 ,Left: Left
+                                 ,Right: Right
+                                 ,Display: Display
+                                 ,Close: Close
+                                 ,GoTo: GoTo
+                                 ,TimeStep: TimeStep
+                                 ,Diaporama: Diaporama
+                                 ,OpenDiapo: OpenDiapo};
+};
