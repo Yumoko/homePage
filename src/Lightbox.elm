@@ -115,7 +115,7 @@ thumbs address model =
       thumb n  =
         a [ onClick address (GoTo n)
           ]
-          [ img [src ("images/photothèque/" 
+          [ img [src ("images/" 
                        ++ (.folder model)
                        ++ "/thumbs/"
                        ++ n)
@@ -135,7 +135,7 @@ lightbox address model =
             ]
             [ div [ class "picContainer"]
                   
-                  [ img [src ("images/photothèque/" 
+                  [ img [src ("images/" 
                              ++ (.folder model) ++ "/"
                              ++ (.filename currentPic))
                         ] []
@@ -179,7 +179,7 @@ lightbox address model =
                           [ ("downloadHDPic", True)
                           , ("displayHDLink", (.linkHD currentPic && .display model))
                           ]
-                       , href ("images/photothèque/" 
+                       , href ("images/" 
                              ++ (.folder model) ++ "/hd/"
                              ++ (.filename currentPic))
                        ] [text "Télécharger photo HD"]    

@@ -17,7 +17,7 @@
 
 <script type="text/javascript">
   var elmDiv = document.getElementById('elm-app');
-  var elmApp = Elm.embed(Elm.HomePage, elmDiv);
+  var elmApp = Elm.embed(Elm.HomePage, elmDiv, {locationSearch: window.location.search});
 </script>
 </body>
 </html>

@@ -1,0 +1,37 @@
+Elm.Listing = Elm.Listing || {};
+Elm.Listing.make = function (_elm) {
+   "use strict";
+   _elm.Listing = _elm.Listing || {};
+   if (_elm.Listing.values) return _elm.Listing.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var others = _U.list(["Screenshot of projectSea.png"]);
+   var watercolour = _U.list(["church.jpg","diedFish.jpg","fairyandbook.jpg","hedgehog.jpg","LilyoftheValley.jpg","parkPath.jpg"]);
+   var sketching = _U.list(["100_6580.JPG"
+                           ,"100_6583.JPG"
+                           ,"100_6593.JPG"
+                           ,"100_6596.JPG"
+                           ,"100_6607.JPG"
+                           ,"100_6611.JPG"
+                           ,"100_6612.JPG"
+                           ,"100_6619.JPG"
+                           ,"100_6622.JPG"
+                           ,"100_6641.JPG"]);
+   var digital = _U.list(["20150429CatPicPractice.jpg"
+                         ,"20150429CatSketching.jpg"
+                         ,"20150430CatSketchingColour.jpg"
+                         ,"20150430CatSketching.jpg"
+                         ,"20150501CatSketching_02.jpg"
+                         ,"20150501CatSketching.jpg"
+                         ,"20150502CatSketchingG.jpg"
+                         ,"20150505CatPicPracticeG.jpg"
+                         ,"20150509DogSketching02.jpg"
+                         ,"20150709CatOil.jpg"]);
+   return _elm.Listing.values = {_op: _op,digital: digital,sketching: sketching,watercolour: watercolour,others: others};
+};

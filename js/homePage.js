@@ -11121,7 +11121,7 @@ Elm.Lightbox.make = function (_elm) {
          _U.list([A2($Html$Events.onClick,address,GoTo(n))]),
          _U.list([A2($Html.img,
          _U.list([$Html$Attributes.src(A2($Basics._op["++"],
-         "images/photothèque/",
+         "images/",
          A2($Basics._op["++"],function (_) {    return _.folder;}(model),A2($Basics._op["++"],"/thumbs/",n))))]),
          _U.list([]))]));
       };
@@ -11151,7 +11151,7 @@ Elm.Lightbox.make = function (_elm) {
               _U.list([$Html$Attributes.$class("picContainer")]),
               _U.list([A2($Html.img,
                       _U.list([$Html$Attributes.src(A2($Basics._op["++"],
-                      "images/photothèque/",
+                      "images/",
                       A2($Basics._op["++"],
                       function (_) {
                          return _.folder;
@@ -11188,7 +11188,7 @@ Elm.Lightbox.make = function (_elm) {
                                                                       return _.display;
                                                                    }(model)}]))
                               ,$Html$Attributes.href(A2($Basics._op["++"],
-                              "images/photothèque/",
+                              "images/",
                               A2($Basics._op["++"],
                               function (_) {
                                  return _.folder;
@@ -11450,6 +11450,43 @@ Elm.Gallery.make = function (_elm) {
    });
    return _elm.Gallery.values = {_op: _op,init: init,update: update,view: view,Model: Model,TimeStep: TimeStep};
 };
+Elm.Listing = Elm.Listing || {};
+Elm.Listing.make = function (_elm) {
+   "use strict";
+   _elm.Listing = _elm.Listing || {};
+   if (_elm.Listing.values) return _elm.Listing.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var others = _U.list(["Screenshot of projectSea.png"]);
+   var watercolour = _U.list(["church.jpg","diedFish.jpg","fairyandbook.jpg","hedgehog.jpg","LilyoftheValley.jpg","parkPath.jpg"]);
+   var sketching = _U.list(["100_6580.JPG"
+                           ,"100_6583.JPG"
+                           ,"100_6593.JPG"
+                           ,"100_6596.JPG"
+                           ,"100_6607.JPG"
+                           ,"100_6611.JPG"
+                           ,"100_6612.JPG"
+                           ,"100_6619.JPG"
+                           ,"100_6622.JPG"
+                           ,"100_6641.JPG"]);
+   var digital = _U.list(["20150429CatPicPractice.jpg"
+                         ,"20150429CatSketching.jpg"
+                         ,"20150430CatSketchingColour.jpg"
+                         ,"20150430CatSketching.jpg"
+                         ,"20150501CatSketching_02.jpg"
+                         ,"20150501CatSketching.jpg"
+                         ,"20150502CatSketchingG.jpg"
+                         ,"20150505CatPicPracticeG.jpg"
+                         ,"20150509DogSketching02.jpg"
+                         ,"20150709CatOil.jpg"]);
+   return _elm.Listing.values = {_op: _op,digital: digital,sketching: sketching,watercolour: watercolour,others: others};
+};
 Elm.HomePage = Elm.HomePage || {};
 Elm.HomePage.make = function (_elm) {
    "use strict";
@@ -11458,50 +11495,25 @@ Elm.HomePage.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
    $Effects = Elm.Effects.make(_elm),
-   $Gallery = Elm.Gallery.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $Lightbox = Elm.Lightbox.make(_elm),
    $List = Elm.List.make(_elm),
+   $Listing = Elm.Listing.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $StartApp = Elm.StartApp.make(_elm),
-   $Task = Elm.Task.make(_elm),
-   $Time = Elm.Time.make(_elm);
+   $Task = Elm.Task.make(_elm);
    var _op = {};
    var footer$ = A2($Html.footer,_U.list([]),_U.list([A2($Html.p,_U.list([]),_U.list([$Html.text("Yu momoko")]))]));
    var about = A2($Html.div,
    _U.list([$Html$Attributes.id("about")]),
    _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("About")]))
            ,A2($Html.div,_U.list([]),_U.list([A2($Html.p,_U.list([]),_U.list([$Html.text("Born in northeast Taiwan, ...")]))]))]));
-   var gallery = A2($Html.div,
-   _U.list([$Html$Attributes.id("gallery")]),
-   _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("Gallery")]))
-           ,A2($Html.div,
-           _U.list([$Html$Attributes.$class("entry")]),
-           _U.list([A2($Html.figure,
-           _U.list([]),
-           _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/WatercolourS.jpg")]),_U.list([]))
-                   ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Watercolour")]))]))]))
-           ,A2($Html.div,
-           _U.list([$Html$Attributes.$class("entry")]),
-           _U.list([A2($Html.figure,
-           _U.list([]),
-           _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/SketchingS.jpg")]),_U.list([]))
-                   ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Drawing and Sketching")]))]))]))
-           ,A2($Html.div,
-           _U.list([$Html$Attributes.$class("entry")]),
-           _U.list([A2($Html.figure,
-           _U.list([]),
-           _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/DigitalS.jpg")]),_U.list([]))
-                   ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Digital painting")]))]))]))
-           ,A2($Html.div,
-           _U.list([$Html$Attributes.$class("entry")]),
-           _U.list([A2($Html.figure,
-           _U.list([]),
-           _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/OthersS.jpg")]),_U.list([]))
-                   ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Others")]))]))]))]));
    var header$ = A2($Html.header,
    _U.list([]),
    _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Website\'s Title")]))
@@ -11513,28 +11525,133 @@ Elm.HomePage.make = function (_elm) {
            _U.list([A2($Html.li,_U.list([]),_U.list([A2($Html.a,_U.list([$Html$Attributes.href("#coverImg")]),_U.list([$Html.text("Top")]))]))
                    ,A2($Html.li,_U.list([]),_U.list([A2($Html.a,_U.list([$Html$Attributes.href("#gallery")]),_U.list([$Html.text("Gallery")]))]))
                    ,A2($Html.li,_U.list([]),_U.list([A2($Html.a,_U.list([$Html$Attributes.href("#about")]),_U.list([$Html.text("About")]))]))]))]))]));
-   var page = A2($Html.div,_U.list([$Html$Attributes.id("page")]),_U.list([header$,gallery,about,footer$]));
    var galleries = _U.list([]);
-   var update = F2(function (action,model) {    return {ctor: "_Tuple2",_0: model,_1: $Effects.none};});
-   var GalleryAction = F2(function (a,b) {    return {ctor: "GalleryAction",_0: a,_1: b};});
-   var timer = function (g) {
-      return A2($Signal.map,function (_p0) {    return A2(GalleryAction,$Basics.snd(g),$Gallery.TimeStep);},$Time.every(3 * $Time.second));
+   var locationSearch = Elm.Native.Port.make(_elm).inbound("locationSearch",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
+   });
+   var toString = function (state) {
+      var _p0 = state;
+      if (_p0.ctor === "Menu") {
+            return "Menu";
+         } else {
+            var _p1 = _p0._0;
+            switch (_p1.ctor)
+            {case "Digital": return "Digital";
+               case "Sketching": return "Sketching";
+               case "Watercolour": return "Watercolour";
+               default: return "Others";}
+         }
    };
-   var timers = A2($List.map,timer,galleries);
+   var LightboxAction = function (a) {    return {ctor: "LightboxAction",_0: a};};
+   var Close = {ctor: "Close"};
+   var Open = function (a) {    return {ctor: "Open",_0: a};};
    var NoOp = {ctor: "NoOp"};
-   var view = F2(function (address,model) {    return page;});
-   var initialModel = _U.list([]);
-   var app = $StartApp.start({init: {ctor: "_Tuple2",_0: initialModel,_1: $Effects.none},view: view,update: update,inputs: timers});
+   var Others = {ctor: "Others"};
+   var Watercolour = {ctor: "Watercolour"};
+   var Sketching = {ctor: "Sketching"};
+   var Digital = {ctor: "Digital"};
+   var gallery = F2(function (address,_p2) {
+      var _p3 = _p2;
+      var _p6 = _p3.current;
+      var _p4 = _p6;
+      if (_p4.ctor === "Menu") {
+            return A2($Html.div,
+            _U.list([$Html$Attributes.id("gallery")]),
+            _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("Gallery")]))
+                    ,A2($Html.div,
+                    _U.list([$Html$Attributes.$class("entry")]),
+                    _U.list([A2($Html.figure,
+                    _U.list([A2($Html$Events.onClick,address,Open(Watercolour))]),
+                    _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/WatercolourS.jpg")]),_U.list([]))
+                            ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Watercolour")]))]))]))
+                    ,A2($Html.div,
+                    _U.list([$Html$Attributes.$class("entry")]),
+                    _U.list([A2($Html.figure,
+                    _U.list([A2($Html$Events.onClick,address,Open(Sketching))]),
+                    _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/SketchingS.jpg")]),_U.list([]))
+                            ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Drawing and Sketching")]))]))]))
+                    ,A2($Html.div,
+                    _U.list([$Html$Attributes.$class("entry")]),
+                    _U.list([A2($Html.figure,
+                    _U.list([A2($Html$Events.onClick,address,Open(Digital))]),
+                    _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/DigitalS.jpg")]),_U.list([]))
+                            ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Digital painting")]))]))]))
+                    ,A2($Html.div,
+                    _U.list([$Html$Attributes.$class("entry")]),
+                    _U.list([A2($Html.figure,
+                    _U.list([A2($Html$Events.onClick,address,Open(Others))]),
+                    _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/OthersS.jpg")]),_U.list([]))
+                            ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Others")]))]))]))]));
+         } else {
+            var _p5 = A2($Dict.get,toString(_p6),_p3.picMap);
+            if (_p5.ctor === "Nothing") {
+                  return A2($Html.div,
+                  _U.list([]),
+                  _U.list([A2($Html.a,_U.list([A2($Html$Events.onClick,address,Close)]),_U.list([$Html.text("Back to menu")]))]));
+               } else {
+                  var lightbox$ = A2($Lightbox.view,A2($Signal.forwardTo,address,LightboxAction),_p5._0);
+                  return A2($Html.div,
+                  _U.list([]),
+                  _U.list([lightbox$,A2($Html.a,_U.list([A2($Html$Events.onClick,address,Close)]),_U.list([$Html.text("Back to menu")]))]));
+               }
+         }
+   });
+   var page = F2(function (address,model) {
+      return A2($Html.div,_U.list([$Html$Attributes.id("page")]),_U.list([header$,A2(gallery,address,model),about,footer$]));
+   });
+   var view = F2(function (address,model) {    return A2(page,address,model);});
+   var Unfolded = function (a) {    return {ctor: "Unfolded",_0: a};};
+   var Menu = {ctor: "Menu"};
+   var update = F2(function (action,model) {
+      var _p7 = action;
+      switch (_p7.ctor)
+      {case "NoOp": return {ctor: "_Tuple2",_0: model,_1: $Effects.none};
+         case "Open": return {ctor: "_Tuple2",_0: _U.update(model,{current: Unfolded(_p7._0)}),_1: $Effects.none};
+         case "Close": return {ctor: "_Tuple2",_0: _U.update(model,{current: Menu}),_1: $Effects.none};
+         default: var _p8 = model;
+           var current = _p8.current;
+           var picMap = _p8.picMap;
+           var _p9 = A2($Dict.get,toString(current),picMap);
+           if (_p9.ctor === "Nothing") {
+                 return {ctor: "_Tuple2",_0: model,_1: $Effects.none};
+              } else {
+                 var lightbox$ = A2($Lightbox.update,_p7._0,_p9._0);
+                 return {ctor: "_Tuple2",_0: _U.update(model,{picMap: A3($Dict.insert,toString(current),lightbox$,picMap)}),_1: $Effects.none};
+              }}
+   });
+   var Model = F2(function (a,b) {    return {current: a,picMap: b};});
+   var initialModel = function () {
+      var toPics = F2(function (xs,folder) {
+         return A2($Lightbox.init,A2($List.map,function (filename) {    return _U.update($Lightbox.defPic,{filename: filename});},xs),folder);
+      });
+      return A2(Model,
+      Menu,
+      $Dict.fromList(_U.list([{ctor: "_Tuple2",_0: "Digital",_1: A2(toPics,$Listing.digital,"digital")}
+                             ,{ctor: "_Tuple2",_0: "Sketching",_1: A2(toPics,$Listing.sketching,"sketching")}
+                             ,{ctor: "_Tuple2",_0: "Watercolour",_1: A2(toPics,$Listing.watercolour,"watercolour")}
+                             ,{ctor: "_Tuple2",_0: "Others",_1: A2(toPics,$Listing.others,"others")}])));
+   }();
+   var app = $StartApp.start({init: {ctor: "_Tuple2",_0: initialModel,_1: $Effects.none},view: view,update: update,inputs: _U.list([])});
    var main = app.html;
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",app.tasks);
    return _elm.HomePage.values = {_op: _op
+                                 ,Model: Model
+                                 ,Menu: Menu
+                                 ,Unfolded: Unfolded
+                                 ,Digital: Digital
+                                 ,Sketching: Sketching
+                                 ,Watercolour: Watercolour
+                                 ,Others: Others
                                  ,initialModel: initialModel
                                  ,view: view
                                  ,NoOp: NoOp
-                                 ,GalleryAction: GalleryAction
+                                 ,Open: Open
+                                 ,Close: Close
+                                 ,LightboxAction: LightboxAction
                                  ,update: update
-                                 ,timer: timer
-                                 ,timers: timers
+                                 ,toString: toString
                                  ,app: app
                                  ,main: main
                                  ,galleries: galleries

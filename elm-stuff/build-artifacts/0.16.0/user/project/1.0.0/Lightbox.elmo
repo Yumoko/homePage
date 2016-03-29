@@ -58,7 +58,7 @@ Elm.Lightbox.make = function (_elm) {
          _U.list([A2($Html$Events.onClick,address,GoTo(n))]),
          _U.list([A2($Html.img,
          _U.list([$Html$Attributes.src(A2($Basics._op["++"],
-         "images/photothèque/",
+         "images/",
          A2($Basics._op["++"],function (_) {    return _.folder;}(model),A2($Basics._op["++"],"/thumbs/",n))))]),
          _U.list([]))]));
       };
@@ -88,7 +88,7 @@ Elm.Lightbox.make = function (_elm) {
               _U.list([$Html$Attributes.$class("picContainer")]),
               _U.list([A2($Html.img,
                       _U.list([$Html$Attributes.src(A2($Basics._op["++"],
-                      "images/photothèque/",
+                      "images/",
                       A2($Basics._op["++"],
                       function (_) {
                          return _.folder;
@@ -125,7 +125,7 @@ Elm.Lightbox.make = function (_elm) {
                                                                       return _.display;
                                                                    }(model)}]))
                               ,$Html$Attributes.href(A2($Basics._op["++"],
-                              "images/photothèque/",
+                              "images/",
                               A2($Basics._op["++"],
                               function (_) {
                                  return _.folder;
