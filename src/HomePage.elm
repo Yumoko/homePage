@@ -10,11 +10,11 @@ import String exposing (words, join, cons, uncons)
 import Char
 import Dict exposing (..)
 import Lightbox exposing (Picture, defPic, picList)
-import Gallery exposing (..)
+--import Gallery exposing (..)
 import Time exposing (..)
 import Task exposing (..)
 import Listing exposing (..)
-import Gallery
+--import Gallery
 
 -- Model
 type alias Model = 
@@ -32,7 +32,10 @@ type Category =
 
 initialModel = 
   let toPics xs folder = 
-        Lightbox.init (List.map (\filename -> { defPic | filename = filename}) xs)
+        Lightbox.init (List.map (\(filename,caption) ->
+                                    { defPic | filename = filename
+                                             , caption  = Just caption
+                                    }) xs)
                       folder
   in 
   Model Menu
@@ -165,7 +168,7 @@ gallery address {current, picMap} =
     Unfolded cat ->
        case Dict.get (toString current) picMap of 
         Nothing -> div []
-                       [ a [ onClick address Close]
+                       [ a [ onClick address Close, id "backMenuBtn"]
                            [ text "Back to menu"]
                        ]
 
@@ -176,7 +179,7 @@ gallery address {current, picMap} =
           in      
               div []
                   [ lightbox'
-                  , a [ onClick address Close]
+                  , a [ onClick address Close, id "backMenuBtn"]
                       [ text "Back to menu"]
                   ]
 

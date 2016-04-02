@@ -11,27 +11,32 @@ Elm.Listing.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var others = _U.list(["Screenshot of projectSea.png"]);
-   var watercolour = _U.list(["church.jpg","diedFish.jpg","fairyandbook.jpg","hedgehog.jpg","LilyoftheValley.jpg","parkPath.jpg"]);
-   var sketching = _U.list(["100_6580.JPG"
-                           ,"100_6583.JPG"
-                           ,"100_6593.JPG"
-                           ,"100_6596.JPG"
-                           ,"100_6607.JPG"
-                           ,"100_6611.JPG"
-                           ,"100_6612.JPG"
-                           ,"100_6619.JPG"
-                           ,"100_6622.JPG"
-                           ,"100_6641.JPG"]);
-   var digital = _U.list(["20150429CatPicPractice.jpg"
-                         ,"20150429CatSketching.jpg"
-                         ,"20150430CatSketchingColour.jpg"
-                         ,"20150430CatSketching.jpg"
-                         ,"20150501CatSketching_02.jpg"
-                         ,"20150501CatSketching.jpg"
-                         ,"20150502CatSketchingG.jpg"
-                         ,"20150505CatPicPracticeG.jpg"
-                         ,"20150509DogSketching02.jpg"
-                         ,"20150709CatOil.jpg"]);
+   var others = _U.list([{ctor: "_Tuple2",_0: "Screenshot of projectSea.png",_1: ""}]);
+   var watercolour = _U.list([{ctor: "_Tuple2",_0: "church.jpg",_1: ""}
+                             ,{ctor: "_Tuple2",_0: "diedFish.jpg",_1: ""}
+                             ,{ctor: "_Tuple2",_0: "fairyandbook.jpg",_1: ""}
+                             ,{ctor: "_Tuple2",_0: "hedgehog.jpg",_1: ""}
+                             ,{ctor: "_Tuple2",_0: "LilyoftheValley.jpg",_1: ""}
+                             ,{ctor: "_Tuple2",_0: "parkPath.jpg",_1: ""}]);
+   var sketching = _U.list([{ctor: "_Tuple2",_0: "100_6580.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6583.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6593.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6596.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6607.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6611.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6612.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6619.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6622.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6641.JPG",_1: ""}]);
+   var digital = _U.list([{ctor: "_Tuple2",_0: "20150429CatPicPractice.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150429CatSketching.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150430CatSketchingColour.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150430CatSketching.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150501CatSketching_02.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150501CatSketching.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150502CatSketchingG.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150505CatPicPracticeG.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150509DogSketching02.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150709CatOil.jpg",_1: ""}]);
    return _elm.Listing.values = {_op: _op,digital: digital,sketching: sketching,watercolour: watercolour,others: others};
 };

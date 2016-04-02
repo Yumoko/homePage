@@ -5577,158 +5577,6 @@ Elm.Time.make = function (_elm) {
                              ,delay: delay
                              ,since: since};
 };
-Elm.Easing = Elm.Easing || {};
-Elm.Easing.make = function (_elm) {
-   "use strict";
-   _elm.Easing = _elm.Easing || {};
-   if (_elm.Easing.values) return _elm.Easing.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Color = Elm.Color.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var cycle = F3(function (animation,d,t) {    return A2(animation,1,t / d - $Basics.toFloat($Basics.floor(t / d)));});
-   var flip = F2(function (easing,time) {    return easing(1 - time);});
-   var retour = F2(function (easing,time) {    return _U.cmp(time,0.5) < 0 ? easing(time * 2) : A2(flip,easing,(time - 0.5) * 2);});
-   var invert = F2(function (easing,time) {    return 1 - easing(1 - time);});
-   var inOut = F3(function (e1,e2,time) {    return _U.cmp(time,0.5) < 0 ? e1(time * 2) / 2 : 0.5 + e2((time - 0.5) * 2) / 2;});
-   var easeInElastic = function (time) {
-      if (_U.eq(time,0.0)) return 0.0; else {
-            var t$ = time - 1;
-            var p = 0.3;
-            var s = 7.5e-2;
-            return 0 - Math.pow(2,10 * t$) * $Basics.sin((t$ - s) * (2 * $Basics.pi) / p);
-         }
-   };
-   var easeOutElastic = invert(easeInElastic);
-   var easeInOutElastic = A2(inOut,easeInElastic,easeOutElastic);
-   var easeOutBounce = function (time) {
-      var t4 = time - 2.625 / 2.75;
-      var t3 = time - 2.25 / 2.75;
-      var t2 = time - 1.5 / 2.75;
-      var a = 7.5625;
-      return _U.cmp(time,1 / 2.75) < 0 ? a * time * time : _U.cmp(time,2 / 2.75) < 0 ? a * t2 * t2 + 0.75 : _U.cmp(time,
-      2.5 / 2.75) < 0 ? a * t3 * t3 + 0.9375 : a * t4 * t4 + 0.984375;
-   };
-   var easeInBounce = invert(easeOutBounce);
-   var easeInOutBounce = A2(inOut,easeInBounce,easeOutBounce);
-   var easeInBack = function (time) {    return time * time * (2.70158 * time - 1.70158);};
-   var easeOutBack = invert(easeInBack);
-   var easeInOutBack = A2(inOut,easeInBack,easeOutBack);
-   var easeOutCirc = function (time) {    return $Basics.sqrt(1 - Math.pow(time - 1,2));};
-   var easeInCirc = invert(easeOutCirc);
-   var easeInOutCirc = A2(inOut,easeInCirc,easeOutCirc);
-   var easeInExpo = function (time) {    return _U.eq(time,0.0) ? 0.0 : Math.pow(2,10 * (time - 1));};
-   var easeOutExpo = invert(easeInExpo);
-   var easeInOutExpo = A2(inOut,easeInExpo,easeOutExpo);
-   var easeOutSine = function (time) {    return $Basics.sin(time * ($Basics.pi / 2));};
-   var easeInSine = invert(easeOutSine);
-   var easeInOutSine = A2(inOut,easeInSine,easeOutSine);
-   var easeInQuint = function (time) {    return Math.pow(time,5);};
-   var easeOutQuint = invert(easeInQuint);
-   var easeInOutQuint = A2(inOut,easeInQuint,easeOutQuint);
-   var easeInQuart = function (time) {    return Math.pow(time,4);};
-   var easeOutQuart = invert(easeInQuart);
-   var easeInOutQuart = A2(inOut,easeInQuart,easeOutQuart);
-   var easeInCubic = function (time) {    return Math.pow(time,3);};
-   var easeOutCubic = invert(easeInCubic);
-   var easeInOutCubic = A2(inOut,easeInCubic,easeOutCubic);
-   var easeInQuad = function (time) {    return Math.pow(time,2);};
-   var easeOutQuad = invert(easeInQuad);
-   var easeInOutQuad = A2(inOut,easeInQuad,easeOutQuad);
-   var linear = $Basics.identity;
-   var pair = F4(function (interpolate,_p1,_p0,v) {
-      var _p2 = _p1;
-      var _p3 = _p0;
-      return {ctor: "_Tuple2",_0: A3(interpolate,_p2._0,_p3._0,v),_1: A3(interpolate,_p2._1,_p3._1,v)};
-   });
-   var $float = F3(function (from,to,v) {    return from + (to - from) * v;});
-   var point2d = F3(function (from,to,v) {    return {x: A3($float,from.x,to.x,v),y: A3($float,from.y,to.y,v)};});
-   var point3d = F3(function (from,to,v) {    return {x: A3($float,from.x,to.x,v),y: A3($float,from.y,to.y,v),z: A3($float,from.z,to.z,v)};});
-   var color = F3(function (from,to,v) {
-      var float$ = F3(function (from,to,v) {    return $Basics.round(A3($float,$Basics.toFloat(from),$Basics.toFloat(to),v));});
-      var _p4 = {ctor: "_Tuple2",_0: $Color.toRgb(from),_1: $Color.toRgb(to)};
-      var rgb1 = _p4._0;
-      var rgb2 = _p4._1;
-      var _p5 = {ctor: "_Tuple4",_0: rgb1.red,_1: rgb1.green,_2: rgb1.blue,_3: rgb1.alpha};
-      var r1 = _p5._0;
-      var g1 = _p5._1;
-      var b1 = _p5._2;
-      var a1 = _p5._3;
-      var _p6 = {ctor: "_Tuple4",_0: rgb2.red,_1: rgb2.green,_2: rgb2.blue,_3: rgb2.alpha};
-      var r2 = _p6._0;
-      var g2 = _p6._1;
-      var b2 = _p6._2;
-      var a2 = _p6._3;
-      return A4($Color.rgba,A3(float$,r1,r2,v),A3(float$,g1,g2,v),A3(float$,b1,b2,v),A3($float,a1,a2,v));
-   });
-   var bezier = F5(function (x1,y1,x2,y2,time) {
-      var casteljau = function (ps) {
-         casteljau: while (true) {
-            var _p7 = ps;
-            if (_p7.ctor === "::" && _p7._0.ctor === "_Tuple2" && _p7._1.ctor === "[]") {
-                  return _p7._0._1;
-               } else {
-                  var _p8 = _p7;
-                  var _v3 = A3($List.map2,F2(function (x,y) {    return A4(pair,$float,x,y,time);}),_p8,A2($Maybe.withDefault,_U.list([]),$List.tail(_p8)));
-                  ps = _v3;
-                  continue casteljau;
-               }
-         }
-      };
-      return casteljau(_U.list([{ctor: "_Tuple2",_0: 0,_1: 0},{ctor: "_Tuple2",_0: x1,_1: y1},{ctor: "_Tuple2",_0: x2,_1: y2},{ctor: "_Tuple2",_0: 1,_1: 1}]));
-   });
-   var ease = F6(function (easing,interpolation,from,to,duration,time) {    return A3(interpolation,from,to,easing(A2($Basics.min,time / duration,1)));});
-   return _elm.Easing.values = {_op: _op
-                               ,ease: ease
-                               ,$float: $float
-                               ,point2d: point2d
-                               ,point3d: point3d
-                               ,color: color
-                               ,pair: pair
-                               ,cycle: cycle
-                               ,invert: invert
-                               ,retour: retour
-                               ,inOut: inOut
-                               ,flip: flip
-                               ,bezier: bezier
-                               ,linear: linear
-                               ,easeInQuad: easeInQuad
-                               ,easeOutQuad: easeOutQuad
-                               ,easeInOutQuad: easeInOutQuad
-                               ,easeInCubic: easeInCubic
-                               ,easeOutCubic: easeOutCubic
-                               ,easeInOutCubic: easeInOutCubic
-                               ,easeInQuart: easeInQuart
-                               ,easeOutQuart: easeOutQuart
-                               ,easeInOutQuart: easeInOutQuart
-                               ,easeInQuint: easeInQuint
-                               ,easeOutQuint: easeOutQuint
-                               ,easeInOutQuint: easeInOutQuint
-                               ,easeInSine: easeInSine
-                               ,easeOutSine: easeOutSine
-                               ,easeInOutSine: easeInOutSine
-                               ,easeInExpo: easeInExpo
-                               ,easeOutExpo: easeOutExpo
-                               ,easeInOutExpo: easeInOutExpo
-                               ,easeInCirc: easeInCirc
-                               ,easeOutCirc: easeOutCirc
-                               ,easeInOutCirc: easeInOutCirc
-                               ,easeInBack: easeInBack
-                               ,easeOutBack: easeOutBack
-                               ,easeInOutBack: easeInOutBack
-                               ,easeInBounce: easeInBounce
-                               ,easeOutBounce: easeOutBounce
-                               ,easeInOutBounce: easeInOutBounce
-                               ,easeInElastic: easeInElastic
-                               ,easeOutElastic: easeOutElastic
-                               ,easeInOutElastic: easeInOutElastic};
-};
 Elm.Native.Array = {};
 Elm.Native.Array.make = function(localRuntime) {
 
@@ -11083,37 +10931,30 @@ Elm.Lightbox.make = function (_elm) {
    var messageOn = F3(function (name,addr,msg) {
       return A3($Html$Events.on,name,$Json$Decode.value,function (_p0) {    return A2($Signal.message,addr,msg);});
    });
+   var targetSrc = A2($Json$Decode.at,_U.list(["target","src"]),$Json$Decode.string);
    var onLoad = messageOn("load");
    var myStyle = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "animation",_1: "fadein 2s"}]));
    var update = F2(function (action,model) {
       var _p1 = action;
       switch (_p1.ctor)
       {case "NoOp": return model;
-         case "Left": return _U.update(model,{pictures: $Streams.left(function (_) {    return _.pictures;}(model))});
-         case "Right": return _U.update(model,{pictures: $Streams.right(function (_) {    return _.pictures;}(model))});
-         case "Display": return _U.update(model,{display: $Basics.not(function (_) {    return _.display;}(model))});
-         case "Close": return _U.update(model,{display: false});
-         case "Diaporama": return _U.update(model,{diaporama: $Basics.not(function (_) {    return _.diaporama;}(model))});
-         case "OpenDiapo": return _U.update(model,{diaporama: true,display: true});
-         case "GoTo": return _U.update(model,
+         case "Left": return _U.update(model,{pictures: $Streams.left(function (_) {    return _.pictures;}(model)),loading: true});
+         case "Right": return _U.update(model,{pictures: $Streams.right(function (_) {    return _.pictures;}(model)),loading: true});
+         case "Close": return _U.update(model,{display: false,loading: false});
+         case "GoTo": var _p2 = _p1._0;
+           return _U.update(model,
            {pictures: A2($Streams.goTo,
            function (_) {
               return _.pictures;
            }(model),
            function (p) {
-              return _U.eq(function (_) {    return _.filename;}(p),_p1._0);
+              return _U.eq(function (_) {    return _.filename;}(p),_p2);
            })
-           ,display: true});
-         default: return _U.update(model,
-           {pictures: function (_) {
-              return _.diaporama;
-           }(model) ? $Streams.right(function (_) {    return _.pictures;}(model)) : function (_) {
-              return _.pictures;
-           }(model)});}
+           ,display: true
+           ,loading: $Basics.not(_U.eq(_p2,function (_) {    return _.filename;}($Streams.current(function (_) {    return _.pictures;}(model)))))});
+         default: return _U.update(model,{loading: false});}
    });
-   var OpenDiapo = {ctor: "OpenDiapo"};
-   var Diaporama = {ctor: "Diaporama"};
-   var TimeStep = {ctor: "TimeStep"};
+   var Loaded = {ctor: "Loaded"};
    var GoTo = function (a) {    return {ctor: "GoTo",_0: a};};
    var thumbs = F2(function (address,model) {
       var thumb = function (n) {
@@ -11129,7 +10970,6 @@ Elm.Lightbox.make = function (_elm) {
       return A2($Html.div,_U.list([$Html$Attributes.$class("thumbs")]),A2($List.map,thumb,nameList));
    });
    var Close = {ctor: "Close"};
-   var Display = {ctor: "Display"};
    var Right = {ctor: "Right"};
    var Left = {ctor: "Left"};
    var NoOp = {ctor: "NoOp"};
@@ -11151,12 +10991,18 @@ Elm.Lightbox.make = function (_elm) {
               _U.list([$Html$Attributes.$class("picContainer")]),
               _U.list([A2($Html.img,
                       _U.list([$Html$Attributes.src(A2($Basics._op["++"],
-                      "images/",
-                      A2($Basics._op["++"],
-                      function (_) {
-                         return _.folder;
-                      }(model),
-                      A2($Basics._op["++"],"/",function (_) {    return _.filename;}(currentPic)))))]),
+                              "images/",
+                              A2($Basics._op["++"],
+                              function (_) {
+                                 return _.folder;
+                              }(model),
+                              A2($Basics._op["++"],"/",function (_) {    return _.filename;}(currentPic)))))
+                              ,A3($Html$Events.on,
+                              "load",
+                              targetSrc,
+                              function (_p3) {
+                                 return A2($Signal.message,address,function (s) {    return Loaded;}(_p3));
+                              })]),
                       _U.list([]))
                       ,A2($Html.div,
                       _U.list([$Html$Attributes.$class("halfPic"),$Html$Attributes.id("halfPicleft"),A2($Html$Events.onClick,address,Left)]),
@@ -11168,43 +11014,32 @@ Elm.Lightbox.make = function (_elm) {
               _U.list([$Html$Attributes.$class("lightBoxcaption")]),
               _U.list([$Html.text(A2($Maybe.withDefault,"",function (_) {    return _.caption;}(currentPic)))
                       ,A2($Html.a,
-                      _U.list([$Html$Attributes.id("closebtn"),$Html$Attributes.$class("noselect"),A2($Html$Events.onClick,address,Display)]),
+                      _U.list([$Html$Attributes.id("closebtn"),$Html$Attributes.$class("noselect"),A2($Html$Events.onClick,address,Close)]),
                       _U.list([A2($Html.i,_U.list([$Html$Attributes.$class("fa fa-times")]),_U.list([]))]))
                       ,A2($Html.a,
-                      _U.list([$Html$Attributes.id("diapoLightbox"),$Html$Attributes.$class("noselect"),A2($Html$Events.onClick,address,Diaporama)]),
-                      _U.list([function (_) {
-                         return _.diaporama;
-                      }(model) ? A2($Html.i,_U.list([$Html$Attributes.$class("fa fa-pause")]),_U.list([])) : A2($Html.i,
-                      _U.list([$Html$Attributes.$class("fa fa-play")]),
-                      _U.list([]))]))
-                      ,A2($Html.a,
-                      _U.list([$Html$Attributes.downloadAs(function (_) {    return _.filename;}(currentPic))
-                              ,$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "downloadHDPic",_1: true}
+                      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "loader",_1: true}
                                                                   ,{ctor: "_Tuple2"
-                                                                   ,_0: "displayHDLink"
+                                                                   ,_0: "display"
                                                                    ,_1: function (_) {
-                                                                      return _.linkHD;
-                                                                   }(currentPic) && function (_) {
+                                                                      return _.loading;
+                                                                   }(model) && function (_) {
                                                                       return _.display;
-                                                                   }(model)}]))
-                              ,$Html$Attributes.href(A2($Basics._op["++"],
-                              "images/",
-                              A2($Basics._op["++"],
-                              function (_) {
-                                 return _.folder;
-                              }(model),
-                              A2($Basics._op["++"],"/hd/",function (_) {    return _.filename;}(currentPic)))))]),
-                      _U.list([$Html.text("Télécharger photo HD")]))]))]))]));
+                                                                   }(model)}]))]),
+                      _U.list([function (_) {
+                         return _.loading;
+                      }(model) ? A2($Html.i,_U.list([$Html$Attributes.$class("fa fa-spinner fa-spin")]),_U.list([])) : A2($Html.i,
+                      _U.list([]),
+                      _U.list([]))]))]))]))]));
    });
    var view = F2(function (address,model) {    return A2($Html.div,_U.list([]),_U.list([A2(thumbs,address,model),A2(lightbox,address,model)]));});
    var picCaption = F2(function (cs,ps) {
       var addCaption = function (p) {
          var caption = function () {
-            var _p4 = $List.head(A2($List.filter,function (_p2) {    var _p3 = _p2;return _U.eq(function (_) {    return _.filename;}(p),_p3._0);},cs));
-            if (_p4.ctor === "Nothing") {
+            var _p6 = $List.head(A2($List.filter,function (_p4) {    var _p5 = _p4;return _U.eq(function (_) {    return _.filename;}(p),_p5._0);},cs));
+            if (_p6.ctor === "Nothing") {
                   return $Maybe.Nothing;
                } else {
-                  return $Maybe.Just(_p4._0._1);
+                  return $Maybe.Just(_p6._0._1);
                }
          }();
          return _U.update(p,{caption: caption});
@@ -11212,7 +11047,7 @@ Elm.Lightbox.make = function (_elm) {
       return A2($List.map,addCaption,ps);
    });
    var Picture = F5(function (a,b,c,d,e) {    return {filename: a,author: b,date: c,caption: d,linkHD: e};});
-   var defPic = A5(Picture,"",$Maybe.Nothing,$Maybe.Nothing,$Maybe.Nothing,false);
+   var defPic = A5(Picture,"",$Maybe.Nothing,$Maybe.Nothing,$Maybe.Just(""),false);
    var picList = function (n) {
       var go = function (m) {
          var filename = _U.cmp(n - m,10) < 0 ? A2($Basics._op["++"],"0",A2($Basics._op["++"],$Basics.toString(n - m),".jpg")) : A2($Basics._op["++"],
@@ -11223,10 +11058,10 @@ Elm.Lightbox.make = function (_elm) {
       };
       return go(n - 1);
    };
-   var Model = F5(function (a,b,c,d,e) {    return {pictures: a,nameList: b,folder: c,display: d,diaporama: e};});
+   var Model = F6(function (a,b,c,d,e,f) {    return {pictures: a,nameList: b,folder: c,display: d,diaporama: e,loading: f};});
    var init = F2(function (pics,folder) {
       var nameList = A2($List.map,function (_) {    return _.filename;},pics);
-      return A5(Model,A2($Streams.biStream,pics,defPic),nameList,folder,false,false);
+      return A6(Model,A2($Streams.biStream,pics,defPic),nameList,folder,false,false,false);
    });
    return _elm.Lightbox.values = {_op: _op
                                  ,init: init
@@ -11240,215 +11075,9 @@ Elm.Lightbox.make = function (_elm) {
                                  ,NoOp: NoOp
                                  ,Left: Left
                                  ,Right: Right
-                                 ,Display: Display
                                  ,Close: Close
                                  ,GoTo: GoTo
-                                 ,TimeStep: TimeStep
-                                 ,Diaporama: Diaporama
-                                 ,OpenDiapo: OpenDiapo};
-};
-Elm.Gallery = Elm.Gallery || {};
-Elm.Gallery.make = function (_elm) {
-   "use strict";
-   _elm.Gallery = _elm.Gallery || {};
-   if (_elm.Gallery.values) return _elm.Gallery.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Easing = Elm.Easing.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
-   $Lightbox = Elm.Lightbox.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Streams = Elm.Streams.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var offset = function (x) {
-      return $Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                             ,_0: "transform"
-                                             ,_1: A2($Basics._op["++"],"translateX(",A2($Basics._op["++"],$Basics.toString(x),"px)"))}]));
-   };
-   var myStyle = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "animation",_1: "fadein 2s"}]));
-   var chunk3 = F3(function (n,xs,def) {
-      var takeAndRotate = F3(function (acc,m,s) {
-         takeAndRotate: while (true) if (_U.eq(m,0)) return acc; else {
-               var _v0 = A2($List._op["::"],A2($Streams.toList,s,n),acc),_v1 = m - 1,_v2 = $Basics.snd($Streams.next(s));
-               acc = _v0;
-               m = _v1;
-               s = _v2;
-               continue takeAndRotate;
-            }
-      });
-      var str = A2($Streams.cycle,xs,def);
-      return $List.reverse(A3(takeAndRotate,_U.list([]),$List.length(xs),str));
-   });
-   var chunk2 = F2(function (n,xs) {
-      var _p0 = xs;
-      if (_p0.ctor === "[]") {
-            return _U.list([]);
-         } else {
-            var _p1 = _p0._1;
-            var ch = A2($List.take,n,A2($List._op["::"],_p0._0,_p1));
-            var l = $List.length(ch);
-            return _U.cmp(l,n) < 0 ? _U.list([A2($Basics._op["++"],ch,$List.reverse(A2($List.take,n - l,$List.reverse(xs))))]) : A2($List._op["::"],
-            ch,
-            A2(chunk2,n,_p1));
-         }
-   });
-   var chunk = F2(function (n,xs) {
-      var _p2 = xs;
-      if (_p2.ctor === "[]") {
-            return _U.list([]);
-         } else {
-            var _p3 = _p2;
-            return A2($List._op["::"],A2($List.take,n,_p3),A2(chunk,n,A2($List.drop,n,_p3)));
-         }
-   });
-   var Diaporama = {ctor: "Diaporama"};
-   var Tick = F2(function (a,b) {    return {ctor: "Tick",_0: a,_1: b};});
-   var MoveRight = {ctor: "MoveRight"};
-   var MoveLeft = {ctor: "MoveLeft"};
-   var LightboxAction = function (a) {    return {ctor: "LightboxAction",_0: a};};
-   var TimeStep = {ctor: "TimeStep"};
-   var Move = {ctor: "Move"};
-   var Unfold = {ctor: "Unfold"};
-   var maxOffset = 224;
-   var duration = 1 * $Time.second;
-   var toOffset = function (animationState) {
-      var _p4 = animationState;
-      if (_p4.ctor === "Nothing") {
-            return 0;
-         } else {
-            return A6($Easing.ease,$Easing.easeOutSine,$Easing.$float,0,maxOffset,duration,_p4._0.elapsedTime);
-         }
-   };
-   var Right = {ctor: "Right"};
-   var Left = {ctor: "Left"};
-   var update = F2(function (action,model) {
-      var _p5 = action;
-      switch (_p5.ctor)
-      {case "Diaporama": return {ctor: "_Tuple2"
-                                ,_0: _U.update(model,{lightbox: A2($Lightbox.update,$Lightbox.OpenDiapo,function (_) {    return _.lightbox;}(model))})
-                                ,_1: $Effects.none};
-         case "Unfold": return {ctor: "_Tuple2",_0: _U.update(model,{unfold: $Basics.not(function (_) {    return _.unfold;}(model))}),_1: $Effects.none};
-         case "Move": return {ctor: "_Tuple2",_0: _U.update(model,{moving: $Basics.not(function (_) {    return _.moving;}(model))}),_1: $Effects.none};
-         case "TimeStep": return {ctor: "_Tuple2"
-                                 ,_0: _U.update(model,
-                                 {lightbox: A2($Lightbox.update,$Lightbox.TimeStep,function (_) {    return _.lightbox;}(model))
-                                 ,direct: function (_) {
-                                    return _.moving;
-                                 }(model) ? Right : function (_) {
-                                    return _.direct;
-                                 }(model)})
-                                 ,_1: function (_) {
-                                    return _.moving;
-                                 }(model) ? $Effects.tick(Tick(Right)) : $Effects.none};
-         case "LightboxAction": return {ctor: "_Tuple2"
-                                       ,_0: _U.update(model,{lightbox: A2($Lightbox.update,_p5._0,function (_) {    return _.lightbox;}(model))})
-                                       ,_1: $Effects.none};
-         case "MoveLeft": var _p6 = model.animationState;
-           if (_p6.ctor === "Nothing") {
-                 return {ctor: "_Tuple2",_0: _U.update(model,{direct: Left}),_1: $Effects.tick(Tick(Left))};
-              } else {
-                 return {ctor: "_Tuple2",_0: model,_1: $Effects.none};
-              }
-         case "MoveRight": var _p7 = model.animationState;
-           if (_p7.ctor === "Nothing") {
-                 return {ctor: "_Tuple2",_0: _U.update(model,{direct: Right}),_1: $Effects.tick(Tick(Right))};
-              } else {
-                 return {ctor: "_Tuple2",_0: model,_1: $Effects.none};
-              }
-         default: var _p11 = _p5._0;
-           var _p10 = _p5._1;
-           var newElapsedTime = function () {
-              var _p8 = model.animationState;
-              if (_p8.ctor === "Nothing") {
-                    return 0;
-                 } else {
-                    return _p8._0.elapsedTime + (_p10 - _p8._0.prevClockTime);
-                 }
-           }();
-           return _U.cmp(newElapsedTime,duration) > 0 ? {ctor: "_Tuple2"
-                                                        ,_0: _U.update(model,
-                                                        {pictures: function () {
-                                                           var _p9 = _p11;
-                                                           if (_p9.ctor === "Right") {
-                                                                 return $Streams.right(function (_) {    return _.pictures;}(model));
-                                                              } else {
-                                                                 return $Streams.left(function (_) {    return _.pictures;}(model));
-                                                              }
-                                                        }()
-                                                        ,animationState: $Maybe.Nothing})
-                                                        ,_1: $Effects.none} : {ctor: "_Tuple2"
-                                                                              ,_0: _U.update(model,
-                                                                              {animationState: $Maybe.Just({elapsedTime: newElapsedTime,prevClockTime: _p10})})
-                                                                              ,_1: $Effects.tick(Tick(_p11))};}
-   });
-   var renderPreview = F2(function (address,model) {
-      var thumb = function (p) {
-         return A2($Html.a,
-         _U.list([A2($Html$Events.onClick,address,LightboxAction($Lightbox.GoTo(function (_) {    return _.filename;}(p))))
-                 ,offset((_U.eq(function (_) {    return _.direct;}(model),Left) ? 1 : -1) * toOffset(function (_) {    return _.animationState;}(model)))]),
-         _U.list([A2($Html.img,
-         _U.list([$Html$Attributes.src(A2($Basics._op["++"],
-         "images/photothèque/",
-         A2($Basics._op["++"],function (_) {    return _.folder;}(model),A2($Basics._op["++"],"/thumbs/",function (_) {    return _.filename;}(p)))))]),
-         _U.list([]))]));
-      };
-      var thumbs = A2($List.map,thumb,$Streams.current(function (_) {    return _.pictures;}(model)));
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("previewPanel")]),
-      _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("previewThumbs")]),
-      _U.list([A2($Html.div,_U.list([$Html$Attributes.$class("innerPannel")]),thumbs)]))]));
-   });
-   var view = F2(function (address,model) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("gallery")]),
-      _U.list([A2(renderPreview,address,model)
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("galleryButtons")]),
-              _U.list([A2($Html.div,
-                      _U.list([$Html$Attributes.$class("seeAll")]),
-                      _U.list([A2($Html.button,_U.list([A2($Html$Events.onClick,address,Unfold)]),_U.list([$Html.text("Voir toutes les photos")]))]))
-                      ,A2($Html.button,
-                      _U.list([A2($Html$Events.onClick,address,MoveLeft)]),
-                      _U.list([A2($Html.i,_U.list([$Html$Attributes.$class("fa fa-backward")]),_U.list([]))]))
-                      ,A2($Html.button,
-                      _U.list([A2($Html$Events.onClick,address,Move)]),
-                      _U.list([function (_) {
-                         return _.moving;
-                      }(model) ? A2($Html.i,_U.list([$Html$Attributes.$class("fa fa-pause")]),_U.list([])) : A2($Html.i,
-                      _U.list([$Html$Attributes.$class("fa fa-play")]),
-                      _U.list([]))]))
-                      ,A2($Html.button,
-                      _U.list([A2($Html$Events.onClick,address,MoveRight)]),
-                      _U.list([A2($Html.i,_U.list([$Html$Attributes.$class("fa fa-forward")]),_U.list([]))]))
-                      ,A2($Html.button,
-                      _U.list([A2($Html$Events.onClick,address,Diaporama),$Html$Attributes.$class("diapoButton")]),
-                      _U.list([$Html.text("Diaporama")]))]))
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "galleryLightbox",_1: true}
-                                                          ,{ctor: "_Tuple2",_0: "display",_1: function (_) {    return _.unfold;}(model)}]))]),
-              _U.list([A2($Lightbox.view,A2($Signal.forwardTo,address,LightboxAction),function (_) {    return _.lightbox;}(model))]))]));
-   });
-   var Model = F9(function (a,b,c,d,e,f,g,h,i) {
-      return {pictures: a,lightbox: b,direct: c,moving: d,unfold: e,diaporama: f,folder: g,descr: h,animationState: i};
-   });
-   var init = F3(function (pics,folder,descr) {
-      var diaporama = false;
-      var unfold = false;
-      var moving = false;
-      var lightbox = A2($Lightbox.init,pics,folder);
-      var pictures = A2($Streams.biStream,A3(chunk3,6,pics,$Lightbox.defPic),_U.list([]));
-      return {ctor: "_Tuple2",_0: A9(Model,pictures,lightbox,Left,moving,unfold,diaporama,folder,descr,$Maybe.Nothing),_1: $Effects.none};
-   });
-   return _elm.Gallery.values = {_op: _op,init: init,update: update,view: view,Model: Model,TimeStep: TimeStep};
+                                 ,Loaded: Loaded};
 };
 Elm.Listing = Elm.Listing || {};
 Elm.Listing.make = function (_elm) {
@@ -11463,28 +11092,33 @@ Elm.Listing.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var others = _U.list(["Screenshot of projectSea.png"]);
-   var watercolour = _U.list(["church.jpg","diedFish.jpg","fairyandbook.jpg","hedgehog.jpg","LilyoftheValley.jpg","parkPath.jpg"]);
-   var sketching = _U.list(["100_6580.JPG"
-                           ,"100_6583.JPG"
-                           ,"100_6593.JPG"
-                           ,"100_6596.JPG"
-                           ,"100_6607.JPG"
-                           ,"100_6611.JPG"
-                           ,"100_6612.JPG"
-                           ,"100_6619.JPG"
-                           ,"100_6622.JPG"
-                           ,"100_6641.JPG"]);
-   var digital = _U.list(["20150429CatPicPractice.jpg"
-                         ,"20150429CatSketching.jpg"
-                         ,"20150430CatSketchingColour.jpg"
-                         ,"20150430CatSketching.jpg"
-                         ,"20150501CatSketching_02.jpg"
-                         ,"20150501CatSketching.jpg"
-                         ,"20150502CatSketchingG.jpg"
-                         ,"20150505CatPicPracticeG.jpg"
-                         ,"20150509DogSketching02.jpg"
-                         ,"20150709CatOil.jpg"]);
+   var others = _U.list([{ctor: "_Tuple2",_0: "Screenshot of projectSea.png",_1: ""}]);
+   var watercolour = _U.list([{ctor: "_Tuple2",_0: "church.jpg",_1: ""}
+                             ,{ctor: "_Tuple2",_0: "diedFish.jpg",_1: ""}
+                             ,{ctor: "_Tuple2",_0: "fairyandbook.jpg",_1: ""}
+                             ,{ctor: "_Tuple2",_0: "hedgehog.jpg",_1: ""}
+                             ,{ctor: "_Tuple2",_0: "LilyoftheValley.jpg",_1: ""}
+                             ,{ctor: "_Tuple2",_0: "parkPath.jpg",_1: ""}]);
+   var sketching = _U.list([{ctor: "_Tuple2",_0: "100_6580.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6583.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6593.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6596.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6607.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6611.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6612.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6619.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6622.JPG",_1: ""}
+                           ,{ctor: "_Tuple2",_0: "100_6641.JPG",_1: ""}]);
+   var digital = _U.list([{ctor: "_Tuple2",_0: "20150429CatPicPractice.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150429CatSketching.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150430CatSketchingColour.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150430CatSketching.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150501CatSketching_02.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150501CatSketching.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150502CatSketchingG.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150505CatPicPracticeG.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150509DogSketching02.jpg",_1: ""}
+                         ,{ctor: "_Tuple2",_0: "20150709CatOil.jpg",_1: ""}]);
    return _elm.Listing.values = {_op: _op,digital: digital,sketching: sketching,watercolour: watercolour,others: others};
 };
 Elm.HomePage = Elm.HomePage || {};
@@ -11589,12 +11223,17 @@ Elm.HomePage.make = function (_elm) {
             if (_p5.ctor === "Nothing") {
                   return A2($Html.div,
                   _U.list([]),
-                  _U.list([A2($Html.a,_U.list([A2($Html$Events.onClick,address,Close)]),_U.list([$Html.text("Back to menu")]))]));
+                  _U.list([A2($Html.a,
+                  _U.list([A2($Html$Events.onClick,address,Close),$Html$Attributes.id("backMenuBtn")]),
+                  _U.list([$Html.text("Back to menu")]))]));
                } else {
                   var lightbox$ = A2($Lightbox.view,A2($Signal.forwardTo,address,LightboxAction),_p5._0);
                   return A2($Html.div,
                   _U.list([]),
-                  _U.list([lightbox$,A2($Html.a,_U.list([A2($Html$Events.onClick,address,Close)]),_U.list([$Html.text("Back to menu")]))]));
+                  _U.list([lightbox$
+                          ,A2($Html.a,
+                          _U.list([A2($Html$Events.onClick,address,Close),$Html$Attributes.id("backMenuBtn")]),
+                          _U.list([$Html.text("Back to menu")]))]));
                }
          }
    });
@@ -11624,7 +11263,9 @@ Elm.HomePage.make = function (_elm) {
    var Model = F2(function (a,b) {    return {current: a,picMap: b};});
    var initialModel = function () {
       var toPics = F2(function (xs,folder) {
-         return A2($Lightbox.init,A2($List.map,function (filename) {    return _U.update($Lightbox.defPic,{filename: filename});},xs),folder);
+         return A2($Lightbox.init,
+         A2($List.map,function (_p10) {    var _p11 = _p10;return _U.update($Lightbox.defPic,{filename: _p11._0,caption: $Maybe.Just(_p11._1)});},xs),
+         folder);
       });
       return A2(Model,
       Menu,

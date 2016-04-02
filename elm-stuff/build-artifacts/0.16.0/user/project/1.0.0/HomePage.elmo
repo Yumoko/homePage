@@ -100,12 +100,17 @@ Elm.HomePage.make = function (_elm) {
             if (_p5.ctor === "Nothing") {
                   return A2($Html.div,
                   _U.list([]),
-                  _U.list([A2($Html.a,_U.list([A2($Html$Events.onClick,address,Close)]),_U.list([$Html.text("Back to menu")]))]));
+                  _U.list([A2($Html.a,
+                  _U.list([A2($Html$Events.onClick,address,Close),$Html$Attributes.id("backMenuBtn")]),
+                  _U.list([$Html.text("Back to menu")]))]));
                } else {
                   var lightbox$ = A2($Lightbox.view,A2($Signal.forwardTo,address,LightboxAction),_p5._0);
                   return A2($Html.div,
                   _U.list([]),
-                  _U.list([lightbox$,A2($Html.a,_U.list([A2($Html$Events.onClick,address,Close)]),_U.list([$Html.text("Back to menu")]))]));
+                  _U.list([lightbox$
+                          ,A2($Html.a,
+                          _U.list([A2($Html$Events.onClick,address,Close),$Html$Attributes.id("backMenuBtn")]),
+                          _U.list([$Html.text("Back to menu")]))]));
                }
          }
    });
@@ -135,7 +140,9 @@ Elm.HomePage.make = function (_elm) {
    var Model = F2(function (a,b) {    return {current: a,picMap: b};});
    var initialModel = function () {
       var toPics = F2(function (xs,folder) {
-         return A2($Lightbox.init,A2($List.map,function (filename) {    return _U.update($Lightbox.defPic,{filename: filename});},xs),folder);
+         return A2($Lightbox.init,
+         A2($List.map,function (_p10) {    var _p11 = _p10;return _U.update($Lightbox.defPic,{filename: _p11._0,caption: $Maybe.Just(_p11._1)});},xs),
+         folder);
       });
       return A2(Model,
       Menu,
