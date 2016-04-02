@@ -167,7 +167,7 @@ gallery address {current, picMap} =
           ]
     Unfolded cat ->
        case Dict.get (toString current) picMap of 
-        Nothing -> div []
+        Nothing -> div [id "tata"]
                        [ a [ onClick address Close, id "backMenuBtn"]
                            [ text "Back to menu"]
                        ]
@@ -177,7 +177,7 @@ gallery address {current, picMap} =
                 Lightbox.view (Signal.forwardTo address LightboxAction) 
                               lightbox
           in      
-              div []
+              div [id "tata"]
                   [ lightbox'
                   , a [ onClick address Close, id "backMenuBtn"]
                       [ text "Back to menu"]

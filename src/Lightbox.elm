@@ -108,6 +108,7 @@ thumbs address model =
 
       thumb n  =
         a [ onClick address (GoTo n)
+          , href "#top" 
           ]
           [ img [src ("images/" 
                        ++ (.folder model)
@@ -176,9 +177,10 @@ onKey address =
 
 view : Signal.Address Action -> Model -> Html
 view address model =
-  div []
+  div [id "toto"]
       [ thumbs address model
       , lightbox address model
+      , div [classList [("fixedBack",True),("display",(.display model))]] []
       ]
 
 

@@ -10959,7 +10959,7 @@ Elm.Lightbox.make = function (_elm) {
    var thumbs = F2(function (address,model) {
       var thumb = function (n) {
          return A2($Html.a,
-         _U.list([A2($Html$Events.onClick,address,GoTo(n))]),
+         _U.list([A2($Html$Events.onClick,address,GoTo(n)),$Html$Attributes.href("#top")]),
          _U.list([A2($Html.img,
          _U.list([$Html$Attributes.src(A2($Basics._op["++"],
          "images/",
@@ -11031,7 +11031,16 @@ Elm.Lightbox.make = function (_elm) {
                       _U.list([]),
                       _U.list([]))]))]))]))]));
    });
-   var view = F2(function (address,model) {    return A2($Html.div,_U.list([]),_U.list([A2(thumbs,address,model),A2(lightbox,address,model)]));});
+   var view = F2(function (address,model) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.id("toto")]),
+      _U.list([A2(thumbs,address,model)
+              ,A2(lightbox,address,model)
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "fixedBack",_1: true}
+                                                          ,{ctor: "_Tuple2",_0: "display",_1: function (_) {    return _.display;}(model)}]))]),
+              _U.list([]))]));
+   });
    var picCaption = F2(function (cs,ps) {
       var addCaption = function (p) {
          var caption = function () {
@@ -11222,14 +11231,14 @@ Elm.HomePage.make = function (_elm) {
             var _p5 = A2($Dict.get,toString(_p6),_p3.picMap);
             if (_p5.ctor === "Nothing") {
                   return A2($Html.div,
-                  _U.list([]),
+                  _U.list([$Html$Attributes.id("tata")]),
                   _U.list([A2($Html.a,
                   _U.list([A2($Html$Events.onClick,address,Close),$Html$Attributes.id("backMenuBtn")]),
                   _U.list([$Html.text("Back to menu")]))]));
                } else {
                   var lightbox$ = A2($Lightbox.view,A2($Signal.forwardTo,address,LightboxAction),_p5._0);
                   return A2($Html.div,
-                  _U.list([]),
+                  _U.list([$Html$Attributes.id("tata")]),
                   _U.list([lightbox$
                           ,A2($Html.a,
                           _U.list([A2($Html$Events.onClick,address,Close),$Html$Attributes.id("backMenuBtn")]),

@@ -99,14 +99,14 @@ Elm.HomePage.make = function (_elm) {
             var _p5 = A2($Dict.get,toString(_p6),_p3.picMap);
             if (_p5.ctor === "Nothing") {
                   return A2($Html.div,
-                  _U.list([]),
+                  _U.list([$Html$Attributes.id("tata")]),
                   _U.list([A2($Html.a,
                   _U.list([A2($Html$Events.onClick,address,Close),$Html$Attributes.id("backMenuBtn")]),
                   _U.list([$Html.text("Back to menu")]))]));
                } else {
                   var lightbox$ = A2($Lightbox.view,A2($Signal.forwardTo,address,LightboxAction),_p5._0);
                   return A2($Html.div,
-                  _U.list([]),
+                  _U.list([$Html$Attributes.id("tata")]),
                   _U.list([lightbox$
                           ,A2($Html.a,
                           _U.list([A2($Html$Events.onClick,address,Close),$Html$Attributes.id("backMenuBtn")]),
