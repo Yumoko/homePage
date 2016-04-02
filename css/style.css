@@ -67,6 +67,16 @@ li a:hover {
 	background-color: firebrick;
 }
 
+#backMenuBtn {
+  padding: 1em;
+  background-color: tomato;
+  color: white;
+  cursor: pointer;
+}
+
+#backMenuBtn:hover{
+  background-color: firebrick;
+}
 
 #gallery {
 	/*border: 1px solid black;*/
@@ -252,8 +262,14 @@ footer {
 .picContainer img{
   display: block;
   width: 100%;
-  max-height: 750px;
+  /*max-height: 750px;*/
   color:#fff;  
+}
+
+@media screen and (max-width: 1368px) {
+  .picContainer img{
+  /*max-height: 550px;*/
+  }
 }
 
 .loader{
