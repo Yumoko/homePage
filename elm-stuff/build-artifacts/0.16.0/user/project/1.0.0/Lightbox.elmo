@@ -23,24 +23,33 @@ Elm.Lightbox.make = function (_elm) {
    var targetSrc = A2($Json$Decode.at,_U.list(["target","src"]),$Json$Decode.string);
    var onLoad = messageOn("load");
    var myStyle = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "animation",_1: "fadein 2s"}]));
-   var update = F2(function (action,model) {
-      var _p1 = action;
+   var blockScroll = function (act) {
+      var _p1 = act;
       switch (_p1.ctor)
+      {case "GoTo": return true;
+         case "Left": return true;
+         case "Right": return true;
+         case "Loaded": return true;
+         default: return false;}
+   };
+   var update = F2(function (action,model) {
+      var _p2 = action;
+      switch (_p2.ctor)
       {case "NoOp": return model;
          case "Left": return _U.update(model,{pictures: $Streams.left(function (_) {    return _.pictures;}(model)),loading: true});
          case "Right": return _U.update(model,{pictures: $Streams.right(function (_) {    return _.pictures;}(model)),loading: true});
          case "Close": return _U.update(model,{display: false,loading: false});
-         case "GoTo": var _p2 = _p1._0;
+         case "GoTo": var _p3 = _p2._0;
            return _U.update(model,
            {pictures: A2($Streams.goTo,
            function (_) {
               return _.pictures;
            }(model),
            function (p) {
-              return _U.eq(function (_) {    return _.filename;}(p),_p2);
+              return _U.eq(function (_) {    return _.filename;}(p),_p3);
            })
            ,display: true
-           ,loading: $Basics.not(_U.eq(_p2,function (_) {    return _.filename;}($Streams.current(function (_) {    return _.pictures;}(model)))))});
+           ,loading: $Basics.not(_U.eq(_p3,function (_) {    return _.filename;}($Streams.current(function (_) {    return _.pictures;}(model)))))});
          default: return _U.update(model,{loading: false});}
    });
    var Loaded = {ctor: "Loaded"};
@@ -89,8 +98,8 @@ Elm.Lightbox.make = function (_elm) {
                               ,A3($Html$Events.on,
                               "load",
                               targetSrc,
-                              function (_p3) {
-                                 return A2($Signal.message,address,function (s) {    return Loaded;}(_p3));
+                              function (_p4) {
+                                 return A2($Signal.message,address,function (s) {    return Loaded;}(_p4));
                               })]),
                       _U.list([]))
                       ,A2($Html.div,
@@ -133,11 +142,11 @@ Elm.Lightbox.make = function (_elm) {
    var picCaption = F2(function (cs,ps) {
       var addCaption = function (p) {
          var caption = function () {
-            var _p6 = $List.head(A2($List.filter,function (_p4) {    var _p5 = _p4;return _U.eq(function (_) {    return _.filename;}(p),_p5._0);},cs));
-            if (_p6.ctor === "Nothing") {
+            var _p7 = $List.head(A2($List.filter,function (_p5) {    var _p6 = _p5;return _U.eq(function (_) {    return _.filename;}(p),_p6._0);},cs));
+            if (_p7.ctor === "Nothing") {
                   return $Maybe.Nothing;
                } else {
-                  return $Maybe.Just(_p6._0._1);
+                  return $Maybe.Just(_p7._0._1);
                }
          }();
          return _U.update(p,{caption: caption});
@@ -168,6 +177,7 @@ Elm.Lightbox.make = function (_elm) {
                                  ,defPic: defPic
                                  ,picList: picList
                                  ,picCaption: picCaption
+                                 ,blockScroll: blockScroll
                                  ,Picture: Picture
                                  ,Model: Model
                                  ,NoOp: NoOp

@@ -4,7 +4,8 @@ module Lightbox (Picture, Model, Action(..)
                 , view
                 , defPic
                 , picList
-                , picCaption) where
+                , picCaption
+                , blockScroll) where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -183,6 +184,15 @@ view address model =
       , div [classList [("fixedBack",True),("display",(.display model))]] []
       ]
 
+
+blockScroll : Action -> Bool
+blockScroll act = 
+  case act of 
+    GoTo _ -> True
+    Left   -> True
+    Right  -> True
+    Loaded -> True
+    _      -> False
 
 myStyle = 
   style [ ("animation", "fadein 2s")

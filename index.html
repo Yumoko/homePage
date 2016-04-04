@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Website</title>
   <script type="text/javascript" src="/js/homePage.js"></script>
+  <!-- <script type="text/javascript" src="/js/jquery-2.2.2.min.js"></script>> -->
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" href="/fonts/font-awesome-4.5.0/css/font-awesome.min.css">
 </head>
@@ -17,7 +18,23 @@
 
 <script type="text/javascript">
   var elmDiv = document.getElementById('elm-app');
-  var elmApp = Elm.embed(Elm.HomePage, elmDiv, {locationSearch: window.location.search});
+  var elmApp = Elm.embed(Elm.HomePage, elmDiv, {locationSearch: window.location.search, scrollY: 0});
+  
+  // $('#page').on( 'scroll', function(){
+  //   elmApp.ports.scrollY.send($("#page").scrollTop())
+  // })
+
+  window.onload = function (){
+    var page = document.getElementById('page');
+    
+    sendScroll = function(){
+      elmApp.ports.scrollY.send(page.scrollTop)
+    }
+
+    page.onscroll = sendScroll
+  }
+  
+
 </script>
 </body>
 </html>

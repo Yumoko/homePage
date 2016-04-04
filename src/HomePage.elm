@@ -19,7 +19,9 @@ import Listing exposing (..)
 -- Model
 type alias Model = 
   { current  : State
-  , picMap   : Dict String (Lightbox.Model) 
+  , picMap   : Dict String (Lightbox.Model)
+  , noScroll : Bool
+  , scrollValue : Int 
   }
 
 type State = Menu | Unfolded Category
@@ -45,6 +47,8 @@ initialModel =
                       , ("Others", toPics others "others")
                       ]
        )
+       False
+       0
 
 -- View
 view address model = page address model
@@ -56,26 +60,33 @@ type Action =
  | Open Category
  | Close 
  | LightboxAction (Lightbox.Action)
+ | ScrollY Int
 
 update : Action -> Model -> (Model, Effects Action) 
 update action model = 
   case action of
     NoOp     -> (model,none)
-    Open cat -> ({ model | current = Unfolded cat } , none)
+    Open cat -> ({ model | current = Unfolded cat }, none)
     Close    -> ({ model | current = Menu }, none)
     
     LightboxAction act -> 
       let {current, picMap} = model
       in
-      case Dict.get (toString current) picMap of 
+      case Dict.get (state2String current) picMap of 
         Nothing -> (model,none)
         Just lightbox ->
           let lightbox' = Lightbox.update act lightbox
+              noScroll' = Lightbox.blockScroll act
           in
-          ({model | picMap = Dict.insert (toString current) lightbox' picMap},none) 
+          ({ model |
+             picMap = Dict.insert (state2String current) lightbox' picMap
+           , noScroll = noScroll' 
+           },none)
 
-toString : State -> String 
-toString state = 
+    ScrollY v -> ({ model | scrollValue = v }, none)
+
+state2String : State -> String 
+state2String state = 
   case state of
     Menu -> "Menu"
     Unfolded cat ->
@@ -93,12 +104,17 @@ toString state =
 
 port locationSearch : String
 
+port scrollY : Signal Int
+
+scrollYUpdate : Signal Action
+scrollYUpdate = Signal.map (\v -> ScrollY  v) scrollY
+
 app =
     StartApp.start
           { init = (initialModel, none)
           , view = view
           , update = update
-          , inputs = []
+          , inputs = [scrollYUpdate]
           }
 
 main =
@@ -115,9 +131,10 @@ galleries = []
 
 
 page address model = 
-  div [id "page"]
+  div [id "page", classList [("pageScroll", .noScroll model)]]
       [ header'
       , gallery address model
+      , p [] [text (toString (.scrollValue model))]
       , about
       , footer' 
       ]
@@ -166,7 +183,7 @@ gallery address {current, picMap} =
                 ]
           ]
     Unfolded cat ->
-       case Dict.get (toString current) picMap of 
+       case Dict.get (state2String current) picMap of 
         Nothing -> div [id "tata"]
                        [ a [ onClick address Close, id "backMenuBtn"]
                            [ text "Back to menu"]
@@ -196,3 +213,8 @@ footer' =
   footer []
          [ p [] [text "Yu momoko"]
          ]
+
+unfolded model =
+  case (.current model) of 
+    Unfolded _ -> True
+    _          -> False 
