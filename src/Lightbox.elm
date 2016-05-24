@@ -25,6 +25,7 @@ type alias Model =
      , display : Bool
      , diaporama : Bool
      , loading : Bool
+     , zoomed : Bool
      }
 
 --, button [ ] [i [class "fa fa-spinner fa-spin"] []]
@@ -69,7 +70,7 @@ picCaption cs ps =
 init : List Picture -> String -> Model
 init pics folder = 
   let nameList = List.map .filename pics
-  in Model (biStream pics defPic) nameList folder False False False
+  in Model (biStream pics defPic) nameList folder False False False False
 
 
 -- Update
@@ -83,6 +84,7 @@ type Action =
  --| TimeStep
  --| Diaporama
  --| OpenDiapo
+ | Zoomed
  | Loaded
 
 update : Action -> Model -> Model
@@ -99,6 +101,7 @@ update action model =
                  , display  = True
                  , loading  = not (n == .filename (current (.pictures model)))
                  }
+    Zoomed -> {model | zoomed = not (.zoomed model)}
     Loaded -> { model | loading = False }
 
 
@@ -126,15 +129,24 @@ lightbox address model =
   div [ classList [("lightbox",True),("display",(.display model))]
       , onKey address, tabindex 0, autofocus True
       ]
-      [ div [ class "lightbox-content"
+      [ div [ classList [("lightbox-content", True)
+                        ,("lbzoomed", .zoomed model)
+                        ,("lbunzoomed", not (.zoomed model))
+                        ]
             , onKey address, tabindex 0, autofocus True
+            , id "lightBC"
             ]
-            [ div [ class "picContainer"]
+            [ div [ class "picContainer", id "picContainer"]
                   
                   [ img [src ("images/" 
                              ++ (.folder model) ++ "/"
                              ++ (.filename currentPic))
                         , on "load" targetSrc (Signal.message address << (\s -> Loaded))
+                        , classList [("zoomed", .zoomed model)
+                                    ,("unzoomed", not (.zoomed model))
+                                    ]
+                        --, attribute "onload" "loadImage()"
+                        , id "lightboxPic"
                         ] []
 
                   
@@ -142,6 +154,10 @@ lightbox address model =
                         , id "halfPicleft"
                         , onClick address Left
                         ] [span [class "noselect"] [text "<<"]]
+                  , div [ id "centerPic"
+                        , onClick address Zoomed
+                        ] [span [class "noselect"] [text "="]]
+
                   , div [ class "halfPic"
                         , id "halfPicright"
                         , onClick address Right

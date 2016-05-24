@@ -20,9 +20,29 @@
   var elmDiv = document.getElementById('elm-app');
   var elmApp = Elm.embed(Elm.HomePage, elmDiv, {locationSearch: window.location.search, scrollY: 0});
   
+  elmApp.ports.requestAdjustMargin.subscribe(adjustMargin);
+
   // $('#page').on( 'scroll', function(){
   //   elmApp.ports.scrollY.send($("#page").scrollTop())
   // })
+  
+  function adjustMargin() {
+    var pic = document.getElementById('picContainer');
+    var lightBC = document.getElementById('lightBC');
+    var imageWidth = pic.offsetWidth;
+    var imageHeight = pic.offsetHeight;
+    var vpWidth = document.documentElement.clientWidth - 13; 
+    // var vpHeight = document.documentElement.clientHeight - 13 ;
+
+    lightBC.style.position = 'absolute'
+    lightBC.style.left = (vpWidth - imageWidth)/2 + 'px';
+    
+    console.log(vpWidth);
+    console.log(imageWidth);  
+    console.log((vpWidth - imageWidth)/2 + 'px');
+    // lightBC.style.left ='0px';
+    // pic.style.top = (vpHeight - imageHeight)/2 + window.pageYOffset + 'px';
+  }
 
   window.onload = function (){
     var page = document.getElementById('page');
@@ -32,7 +52,11 @@
     }
 
     page.onscroll = sendScroll
+  
+  
+
   }
+  
   
 
 </script>

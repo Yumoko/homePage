@@ -10961,9 +10961,11 @@ Elm.Lightbox.make = function (_elm) {
            })
            ,display: true
            ,loading: $Basics.not(_U.eq(_p3,function (_) {    return _.filename;}($Streams.current(function (_) {    return _.pictures;}(model)))))});
+         case "Zoomed": return _U.update(model,{zoomed: $Basics.not(function (_) {    return _.zoomed;}(model))});
          default: return _U.update(model,{loading: false});}
    });
    var Loaded = {ctor: "Loaded"};
+   var Zoomed = {ctor: "Zoomed"};
    var GoTo = function (a) {    return {ctor: "GoTo",_0: a};};
    var thumbs = F2(function (address,model) {
       var thumb = function (n) {
@@ -10995,9 +10997,15 @@ Elm.Lightbox.make = function (_elm) {
               ,$Html$Attributes.tabindex(0)
               ,$Html$Attributes.autofocus(true)]),
       _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("lightbox-content"),onKey(address),$Html$Attributes.tabindex(0),$Html$Attributes.autofocus(true)]),
+      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "lightbox-content",_1: true}
+                                                  ,{ctor: "_Tuple2",_0: "lbzoomed",_1: function (_) {    return _.zoomed;}(model)}
+                                                  ,{ctor: "_Tuple2",_0: "lbunzoomed",_1: $Basics.not(function (_) {    return _.zoomed;}(model))}]))
+              ,onKey(address)
+              ,$Html$Attributes.tabindex(0)
+              ,$Html$Attributes.autofocus(true)
+              ,$Html$Attributes.id("lightBC")]),
       _U.list([A2($Html.div,
-              _U.list([$Html$Attributes.$class("picContainer")]),
+              _U.list([$Html$Attributes.$class("picContainer"),$Html$Attributes.id("picContainer")]),
               _U.list([A2($Html.img,
                       _U.list([$Html$Attributes.src(A2($Basics._op["++"],
                               "images/",
@@ -11011,11 +11019,19 @@ Elm.Lightbox.make = function (_elm) {
                               targetSrc,
                               function (_p4) {
                                  return A2($Signal.message,address,function (s) {    return Loaded;}(_p4));
-                              })]),
+                              })
+                              ,$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "zoomed",_1: function (_) {    return _.zoomed;}(model)}
+                                                                  ,{ctor: "_Tuple2"
+                                                                   ,_0: "unzoomed"
+                                                                   ,_1: $Basics.not(function (_) {    return _.zoomed;}(model))}]))
+                              ,$Html$Attributes.id("lightboxPic")]),
                       _U.list([]))
                       ,A2($Html.div,
                       _U.list([$Html$Attributes.$class("halfPic"),$Html$Attributes.id("halfPicleft"),A2($Html$Events.onClick,address,Left)]),
                       _U.list([A2($Html.span,_U.list([$Html$Attributes.$class("noselect")]),_U.list([$Html.text("<<")]))]))
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.id("centerPic"),A2($Html$Events.onClick,address,Zoomed)]),
+                      _U.list([A2($Html.span,_U.list([$Html$Attributes.$class("noselect")]),_U.list([$Html.text("=")]))]))
                       ,A2($Html.div,
                       _U.list([$Html$Attributes.$class("halfPic"),$Html$Attributes.id("halfPicright"),A2($Html$Events.onClick,address,Right)]),
                       _U.list([A2($Html.span,_U.list([$Html$Attributes.$class("noselect")]),_U.list([$Html.text(">>")]))]))]))
@@ -11076,10 +11092,10 @@ Elm.Lightbox.make = function (_elm) {
       };
       return go(n - 1);
    };
-   var Model = F6(function (a,b,c,d,e,f) {    return {pictures: a,nameList: b,folder: c,display: d,diaporama: e,loading: f};});
+   var Model = F7(function (a,b,c,d,e,f,g) {    return {pictures: a,nameList: b,folder: c,display: d,diaporama: e,loading: f,zoomed: g};});
    var init = F2(function (pics,folder) {
       var nameList = A2($List.map,function (_) {    return _.filename;},pics);
-      return A6(Model,A2($Streams.biStream,pics,defPic),nameList,folder,false,false,false);
+      return A7(Model,A2($Streams.biStream,pics,defPic),nameList,folder,false,false,false,false);
    });
    return _elm.Lightbox.values = {_op: _op
                                  ,init: init
@@ -11096,6 +11112,7 @@ Elm.Lightbox.make = function (_elm) {
                                  ,Right: Right
                                  ,Close: Close
                                  ,GoTo: GoTo
+                                 ,Zoomed: Zoomed
                                  ,Loaded: Loaded};
 };
 Elm.Listing = Elm.Listing || {};
@@ -11187,6 +11204,8 @@ Elm.HomePage.make = function (_elm) {
                    ,A2($Html.li,_U.list([]),_U.list([A2($Html.a,_U.list([$Html$Attributes.href("#gallery")]),_U.list([$Html.text("Gallery")]))]))
                    ,A2($Html.li,_U.list([]),_U.list([A2($Html.a,_U.list([$Html$Attributes.href("#about")]),_U.list([$Html.text("About")]))]))]))]))]));
    var galleries = _U.list([]);
+   var requestAdjustMarginMailbox = $Signal.mailbox("");
+   var requestAdjustMargin = Elm.Native.Port.make(_elm).outboundSignal("requestAdjustMargin",function (v) {    return v;},requestAdjustMarginMailbox.signal);
    var scrollY = Elm.Native.Port.make(_elm).inboundSignal("scrollY",
    "Int",
    function (v) {
@@ -11216,15 +11235,16 @@ Elm.HomePage.make = function (_elm) {
    var Close = {ctor: "Close"};
    var Open = function (a) {    return {ctor: "Open",_0: a};};
    var NoOp = {ctor: "NoOp"};
+   var sendAdjustMargin = A2($Effects.map,function (_p3) {    return NoOp;},$Effects.task(A2($Signal.send,requestAdjustMarginMailbox.address,"")));
    var Others = {ctor: "Others"};
    var Watercolour = {ctor: "Watercolour"};
    var Sketching = {ctor: "Sketching"};
    var Digital = {ctor: "Digital"};
-   var gallery = F2(function (address,_p3) {
-      var _p4 = _p3;
-      var _p7 = _p4.current;
-      var _p5 = _p7;
-      if (_p5.ctor === "Menu") {
+   var gallery = F2(function (address,_p4) {
+      var _p5 = _p4;
+      var _p8 = _p5.current;
+      var _p6 = _p8;
+      if (_p6.ctor === "Menu") {
             return A2($Html.div,
             _U.list([$Html$Attributes.id("gallery")]),
             _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("Gallery")]))
@@ -11253,15 +11273,15 @@ Elm.HomePage.make = function (_elm) {
                     _U.list([A2($Html.img,_U.list([$Html$Attributes.src("images/OthersS.jpg")]),_U.list([]))
                             ,A2($Html.figcaption,_U.list([]),_U.list([$Html.text("Others")]))]))]))]));
          } else {
-            var _p6 = A2($Dict.get,state2String(_p7),_p4.picMap);
-            if (_p6.ctor === "Nothing") {
+            var _p7 = A2($Dict.get,state2String(_p8),_p5.picMap);
+            if (_p7.ctor === "Nothing") {
                   return A2($Html.div,
                   _U.list([$Html$Attributes.id("tata")]),
                   _U.list([A2($Html.a,
                   _U.list([A2($Html$Events.onClick,address,Close),$Html$Attributes.id("backMenuBtn")]),
                   _U.list([$Html.text("Back to menu")]))]));
                } else {
-                  var lightbox$ = A2($Lightbox.view,A2($Signal.forwardTo,address,LightboxAction),_p6._0);
+                  var lightbox$ = A2($Lightbox.view,A2($Signal.forwardTo,address,LightboxAction),_p7._0);
                   return A2($Html.div,
                   _U.list([$Html$Attributes.id("tata")]),
                   _U.list([lightbox$
@@ -11285,32 +11305,31 @@ Elm.HomePage.make = function (_elm) {
    var Unfolded = function (a) {    return {ctor: "Unfolded",_0: a};};
    var Menu = {ctor: "Menu"};
    var update = F2(function (action,model) {
-      var _p8 = action;
-      switch (_p8.ctor)
+      var _p9 = action;
+      switch (_p9.ctor)
       {case "NoOp": return {ctor: "_Tuple2",_0: model,_1: $Effects.none};
-         case "Open": return {ctor: "_Tuple2",_0: _U.update(model,{current: Unfolded(_p8._0)}),_1: $Effects.none};
+         case "Open": return {ctor: "_Tuple2",_0: _U.update(model,{current: Unfolded(_p9._0)}),_1: $Effects.none};
          case "Close": return {ctor: "_Tuple2",_0: _U.update(model,{current: Menu}),_1: $Effects.none};
-         case "LightboxAction": var _p11 = _p8._0;
-           var _p9 = model;
-           var current = _p9.current;
-           var picMap = _p9.picMap;
-           var _p10 = A2($Dict.get,state2String(current),picMap);
-           if (_p10.ctor === "Nothing") {
+         case "LightboxAction": var _p13 = _p9._0;
+           var _p10 = model;
+           var current = _p10.current;
+           var picMap = _p10.picMap;
+           var _p11 = A2($Dict.get,state2String(current),picMap);
+           if (_p11.ctor === "Nothing") {
                  return {ctor: "_Tuple2",_0: model,_1: $Effects.none};
               } else {
-                 var noScroll$ = $Lightbox.blockScroll(_p11);
-                 var lightbox$ = A2($Lightbox.update,_p11,_p10._0);
-                 return {ctor: "_Tuple2"
-                        ,_0: _U.update(model,{picMap: A3($Dict.insert,state2String(current),lightbox$,picMap),noScroll: noScroll$})
-                        ,_1: $Effects.none};
+                 var eff = function () {    var _p12 = _p13;if (_p12.ctor === "Loaded") {    return sendAdjustMargin;} else {    return $Effects.none;}}();
+                 var noScroll$ = $Lightbox.blockScroll(_p13);
+                 var lightbox$ = A2($Lightbox.update,_p13,_p11._0);
+                 return {ctor: "_Tuple2",_0: _U.update(model,{picMap: A3($Dict.insert,state2String(current),lightbox$,picMap),noScroll: noScroll$}),_1: eff};
               }
-         default: return {ctor: "_Tuple2",_0: _U.update(model,{scrollValue: _p8._0}),_1: $Effects.none};}
+         default: return {ctor: "_Tuple2",_0: _U.update(model,{scrollValue: _p9._0}),_1: $Effects.none};}
    });
    var Model = F4(function (a,b,c,d) {    return {current: a,picMap: b,noScroll: c,scrollValue: d};});
    var initialModel = function () {
       var toPics = F2(function (xs,folder) {
          return A2($Lightbox.init,
-         A2($List.map,function (_p12) {    var _p13 = _p12;return _U.update($Lightbox.defPic,{filename: _p13._0,caption: $Maybe.Just(_p13._1)});},xs),
+         A2($List.map,function (_p14) {    var _p15 = _p14;return _U.update($Lightbox.defPic,{filename: _p15._0,caption: $Maybe.Just(_p15._1)});},xs),
          folder);
       });
       return A4(Model,
@@ -11343,6 +11362,8 @@ Elm.HomePage.make = function (_elm) {
                                  ,update: update
                                  ,state2String: state2String
                                  ,scrollYUpdate: scrollYUpdate
+                                 ,requestAdjustMarginMailbox: requestAdjustMarginMailbox
+                                 ,sendAdjustMargin: sendAdjustMargin
                                  ,app: app
                                  ,main: main
                                  ,galleries: galleries

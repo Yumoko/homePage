@@ -9,7 +9,7 @@ import List exposing (..)
 import String exposing (words, join, cons, uncons)
 import Char
 import Dict exposing (..)
-import Lightbox exposing (Picture, defPic, picList)
+import Lightbox exposing (Picture, defPic, picList, Action)
 --import Gallery exposing (..)
 import Time exposing (..)
 import Task exposing (..)
@@ -60,7 +60,7 @@ type Action =
  | Open Category
  | Close 
  | LightboxAction (Lightbox.Action)
- | ScrollY Int
+ | ScrollY Int 
 
 update : Action -> Model -> (Model, Effects Action) 
 update action model = 
@@ -77,11 +77,17 @@ update action model =
         Just lightbox ->
           let lightbox' = Lightbox.update act lightbox
               noScroll' = Lightbox.blockScroll act
+              
+              eff       =
+                case act of 
+                  Lightbox.Loaded -> sendAdjustMargin
+                  --Lightbox.Zoomed -> sendAdjustMargin
+                  _               -> none 
           in
           ({ model |
              picMap = Dict.insert (state2String current) lightbox' picMap
            , noScroll = noScroll' 
-           },none)
+           },eff)
 
     ScrollY v -> ({ model | scrollValue = v }, none)
 
@@ -108,6 +114,24 @@ port scrollY : Signal Int
 
 scrollYUpdate : Signal Action
 scrollYUpdate = Signal.map (\v -> ScrollY  v) scrollY
+
+-- explanation for this mess at:
+-- http://danielbachler.de/2016/02/26/ports-in-elm.html
+
+requestAdjustMarginMailbox : Signal.Mailbox String
+requestAdjustMarginMailbox =
+  Signal.mailbox ""
+
+port requestAdjustMargin : Signal String
+port requestAdjustMargin =
+  requestAdjustMarginMailbox.signal
+
+sendAdjustMargin : Effects Action
+sendAdjustMargin =
+  Signal.send requestAdjustMarginMailbox.address ""
+  |> Effects.task
+  |> Effects.map (\_ -> NoOp)
+
 
 app =
     StartApp.start
