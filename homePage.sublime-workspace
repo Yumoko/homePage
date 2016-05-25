@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"o",
+				"offsetHeight"
+			],
+			[
+				"vp",
+				"vpHeight"
+			],
+			[
 				"pic",
 				"picContainer"
 			],
@@ -86,10 +94,6 @@
 			[
 				"f",
 				"folder"
-			],
-			[
-				"o",
-				"Others"
 			],
 			[
 				"w",
@@ -510,23 +514,11 @@
 			[
 				"Loac",
 				"locationSearch"
-			],
-			[
-				"eac",
-				"eachPair"
 			]
 		]
 	},
 	"buffers":
 	[
-		{
-			"file": "css/style.css",
-			"settings":
-			{
-				"buffer_size": 8389,
-				"line_ending": "Unix"
-			}
-		},
 		{
 			"file": "src/Listing.elm",
 			"settings":
@@ -563,7 +555,7 @@
 			"file": "src/Lightbox.elm",
 			"settings":
 			{
-				"buffer_size": 6760,
+				"buffer_size": 6761,
 				"line_ending": "Unix"
 			}
 		},
@@ -584,10 +576,18 @@
 			}
 		},
 		{
+			"file": "css/style.css",
+			"settings":
+			{
+				"buffer_size": 8679,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 1772,
+				"buffer_size": 2039,
 				"line_ending": "Unix"
 			}
 		}
@@ -970,36 +970,6 @@
 			[
 				{
 					"buffer": 0,
-					"file": "css/style.css",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8389,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4582,
-								4582
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/CSS/CSS.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": -0.0,
-						"translation.y": 3522.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "src/Listing.elm",
 					"semi_transient": false,
 					"settings":
@@ -1025,11 +995,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 1,
 					"file": "src/Gallery.elm",
 					"semi_transient": false,
 					"settings":
@@ -1055,11 +1025,11 @@
 						"translation.y": 1029.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 2,
 					"file": "/home/eniac314/prog/elm/mairieMurol/src/Annee2016.elm",
 					"semi_transient": false,
 					"settings":
@@ -1089,7 +1059,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 3,
 					"file": "src/HomePage.elm",
 					"semi_transient": false,
 					"settings":
@@ -1101,8 +1071,8 @@
 						"selection":
 						[
 							[
-								2212,
-								2212
+								1850,
+								1850
 							]
 						],
 						"settings":
@@ -1115,24 +1085,24 @@
 						"translation.y": 1254.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 4,
 					"file": "src/Lightbox.elm",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6760,
+						"buffer_size": 6761,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3959,
-								3959
+								4454,
+								4454
 							]
 						],
 						"settings":
@@ -1142,14 +1112,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1995.0,
+						"translation.y": 2394.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 5,
 					"file": "Gruntfile.js",
 					"semi_transient": false,
 					"settings":
@@ -1179,7 +1149,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 6,
 					"file": "elm-package.json",
 					"semi_transient": false,
 					"settings":
@@ -1209,20 +1179,50 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "index.html",
+					"buffer": 7,
+					"file": "css/style.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1772,
+						"buffer_size": 8679,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1198,
-								1198
+								4852,
+								4852
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5194.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2039,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1536,
+								1678
 							]
 						],
 						"settings":
@@ -1232,7 +1232,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 285.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,

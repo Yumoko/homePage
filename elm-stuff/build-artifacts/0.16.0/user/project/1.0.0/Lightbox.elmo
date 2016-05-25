@@ -113,13 +113,14 @@ Elm.Lightbox.make = function (_elm) {
                                                                   ,{ctor: "_Tuple2"
                                                                    ,_0: "unzoomed"
                                                                    ,_1: $Basics.not(function (_) {    return _.zoomed;}(model))}]))
+                              ,A2($Html$Attributes.attribute,"onload","adjustMargin()")
                               ,$Html$Attributes.id("lightboxPic")]),
                       _U.list([]))
                       ,A2($Html.div,
                       _U.list([$Html$Attributes.$class("halfPic"),$Html$Attributes.id("halfPicleft"),A2($Html$Events.onClick,address,Left)]),
                       _U.list([A2($Html.span,_U.list([$Html$Attributes.$class("noselect")]),_U.list([$Html.text("<<")]))]))
                       ,A2($Html.div,
-                      _U.list([$Html$Attributes.id("centerPic"),A2($Html$Events.onClick,address,Zoomed)]),
+                      _U.list([$Html$Attributes.id("centerPic")]),
                       _U.list([A2($Html.span,_U.list([$Html$Attributes.$class("noselect")]),_U.list([$Html.text("=")]))]))
                       ,A2($Html.div,
                       _U.list([$Html$Attributes.$class("halfPic"),$Html$Attributes.id("halfPicright"),A2($Html$Events.onClick,address,Right)]),
@@ -169,8 +170,8 @@ Elm.Lightbox.make = function (_elm) {
       };
       return A2($List.map,addCaption,ps);
    });
-   var Picture = F5(function (a,b,c,d,e) {    return {filename: a,author: b,date: c,caption: d,linkHD: e};});
-   var defPic = A5(Picture,"",$Maybe.Nothing,$Maybe.Nothing,$Maybe.Just(""),false);
+   var Picture = F6(function (a,b,c,d,e,f) {    return {filename: a,author: b,date: c,caption: d,linkHD: e,size: f};});
+   var defPic = A6(Picture,"",$Maybe.Nothing,$Maybe.Nothing,$Maybe.Just(""),false,$Maybe.Nothing);
    var picList = function (n) {
       var go = function (m) {
          var filename = _U.cmp(n - m,10) < 0 ? A2($Basics._op["++"],"0",A2($Basics._op["++"],$Basics.toString(n - m),".jpg")) : A2($Basics._op["++"],
@@ -181,10 +182,10 @@ Elm.Lightbox.make = function (_elm) {
       };
       return go(n - 1);
    };
-   var Model = F7(function (a,b,c,d,e,f,g) {    return {pictures: a,nameList: b,folder: c,display: d,diaporama: e,loading: f,zoomed: g};});
+   var Model = F8(function (a,b,c,d,e,f,g,h) {    return {pictures: a,nameList: b,folder: c,display: d,diaporama: e,loading: f,zoomed: g,vpSize: h};});
    var init = F2(function (pics,folder) {
       var nameList = A2($List.map,function (_) {    return _.filename;},pics);
-      return A7(Model,A2($Streams.biStream,pics,defPic),nameList,folder,false,false,false,false);
+      return A8(Model,A2($Streams.biStream,pics,defPic),nameList,folder,false,false,false,false,$Maybe.Nothing);
    });
    return _elm.Lightbox.values = {_op: _op
                                  ,init: init

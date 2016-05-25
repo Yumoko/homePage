@@ -16,6 +16,8 @@ import String exposing (words, join, cons, uncons)
 import Dict exposing (..)
 import Date exposing (..)
 import Streams exposing (..)
+import DOM exposing (target, offsetWidth)
+
 
 -- Model
 type alias Model = 
@@ -26,6 +28,7 @@ type alias Model =
      , diaporama : Bool
      , loading : Bool
      , zoomed : Bool
+     , vpSize : Maybe (Int,Int)
      }
 
 --, button [ ] [i [class "fa fa-spinner fa-spin"] []]
@@ -36,10 +39,11 @@ type alias Picture =
     , date : Maybe Date  
     , caption : Maybe String
     , linkHD : Bool
+    , size : Maybe (Int,Int)
     }
 
 defPic : Picture
-defPic = Picture "" Nothing Nothing (Just "") False
+defPic = Picture "" Nothing Nothing (Just "") False Nothing
 
 picList : Int -> List Picture
 picList n = 
@@ -70,7 +74,7 @@ picCaption cs ps =
 init : List Picture -> String -> Model
 init pics folder = 
   let nameList = List.map .filename pics
-  in Model (biStream pics defPic) nameList folder False False False False
+  in Model (biStream pics defPic) nameList folder False False False False Nothing
 
 
 -- Update
@@ -145,7 +149,7 @@ lightbox address model =
                         , classList [("zoomed", .zoomed model)
                                     ,("unzoomed", not (.zoomed model))
                                     ]
-                        --, attribute "onload" "loadImage()"
+                        , attribute "onload" "adjustMargin()"
                         , id "lightboxPic"
                         ] []
 
@@ -155,7 +159,7 @@ lightbox address model =
                         , onClick address Left
                         ] [span [class "noselect"] [text "<<"]]
                   , div [ id "centerPic"
-                        , onClick address Zoomed
+                        --, onClick address Zoomed
                         ] [span [class "noselect"] [text "="]]
 
                   , div [ class "halfPic"

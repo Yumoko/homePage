@@ -91,7 +91,7 @@ update action model =
 
     ScrollY v -> ({ model | scrollValue = v }, none)
 
-state2String : State -> String 
+state2String : State -> String  
 state2String state = 
   case state of
     Menu -> "Menu"

@@ -1,0 +1,78 @@
+Elm.DOM = Elm.DOM || {};
+Elm.DOM.make = function (_elm) {
+   "use strict";
+   _elm.DOM = _elm.DOM || {};
+   if (_elm.DOM.values) return _elm.DOM.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var className = A2($Json$Decode.at,_U.list(["className"]),$Json$Decode.string);
+   var Rectangle = F4(function (a,b,c,d) {    return {top: a,left: b,width: c,height: d};});
+   var scrollTop = A2($Json$Decode._op[":="],"scrollTop",$Json$Decode.$float);
+   var scrollLeft = A2($Json$Decode._op[":="],"scrollLeft",$Json$Decode.$float);
+   var offsetTop = A2($Json$Decode._op[":="],"offsetTop",$Json$Decode.$float);
+   var offsetLeft = A2($Json$Decode._op[":="],"offsetLeft",$Json$Decode.$float);
+   var offsetHeight = A2($Json$Decode._op[":="],"offsetHeight",$Json$Decode.$float);
+   var offsetWidth = A2($Json$Decode._op[":="],"offsetWidth",$Json$Decode.$float);
+   var childNodes = function (decoder) {
+      var loop = F2(function (idx,xs) {
+         return A2($Json$Decode.andThen,
+         $Json$Decode.maybe(A2($Json$Decode._op[":="],$Basics.toString(idx),decoder)),
+         function (_p0) {
+            return A2($Maybe.withDefault,$Json$Decode.succeed(xs),A2($Maybe.map,function (x) {    return A2(loop,idx + 1,A2($List._op["::"],x,xs));},_p0));
+         });
+      });
+      return A2($Json$Decode.map,$List.reverse,A2($Json$Decode._op[":="],"childNodes",A2(loop,0,_U.list([]))));
+   };
+   var childNode = function (idx) {    return $Json$Decode.at(_U.list(["childNodes",$Basics.toString(idx)]));};
+   var parentElement = function (decoder) {    return A2($Json$Decode._op[":="],"parentElement",decoder);};
+   var previousSibling = function (decoder) {    return A2($Json$Decode._op[":="],"previousSibling",decoder);};
+   var nextSibling = function (decoder) {    return A2($Json$Decode._op[":="],"nextSibling",decoder);};
+   var offsetParent = F2(function (x,decoder) {
+      return $Json$Decode.oneOf(_U.list([A2($Json$Decode._op[":="],"offsetParent",$Json$Decode.$null(x)),A2($Json$Decode._op[":="],"offsetParent",decoder)]));
+   });
+   var position = F2(function (x,y) {
+      return A2($Json$Decode.andThen,
+      A5($Json$Decode.object4,
+      F4(function (scrollLeft,scrollTop,offsetLeft,offsetTop) {    return {ctor: "_Tuple2",_0: x + offsetLeft - scrollLeft,_1: y + offsetTop - scrollTop};}),
+      scrollLeft,
+      scrollTop,
+      offsetLeft,
+      offsetTop),
+      function (_p1) {
+         var _p2 = _p1;
+         var _p4 = _p2._1;
+         var _p3 = _p2._0;
+         return A2(offsetParent,{ctor: "_Tuple2",_0: _p3,_1: _p4},A2(position,_p3,_p4));
+      });
+   });
+   var boundingClientRect = A4($Json$Decode.object3,
+   F3(function (_p5,width,height) {    var _p6 = _p5;return {top: _p6._1,left: _p6._0,width: width,height: height};}),
+   A2(position,0,0),
+   offsetWidth,
+   offsetHeight);
+   var target = function (decoder) {    return A2($Json$Decode._op[":="],"target",decoder);};
+   return _elm.DOM.values = {_op: _op
+                            ,target: target
+                            ,offsetParent: offsetParent
+                            ,parentElement: parentElement
+                            ,nextSibling: nextSibling
+                            ,previousSibling: previousSibling
+                            ,childNode: childNode
+                            ,childNodes: childNodes
+                            ,offsetWidth: offsetWidth
+                            ,offsetHeight: offsetHeight
+                            ,offsetLeft: offsetLeft
+                            ,offsetTop: offsetTop
+                            ,scrollLeft: scrollLeft
+                            ,scrollTop: scrollTop
+                            ,boundingClientRect: boundingClientRect
+                            ,className: className
+                            ,Rectangle: Rectangle};
+};
