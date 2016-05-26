@@ -80,7 +80,7 @@ update action model =
               
               eff       =
                 case act of 
-                  Lightbox.Loaded -> sendAdjustMargin
+                  --Lightbox.Loaded _ -> sendAdjustMargin
                   --Lightbox.Zoomed -> sendAdjustMargin
                   _               -> none 
           in

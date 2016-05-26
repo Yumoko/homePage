@@ -16,7 +16,7 @@ import String exposing (words, join, cons, uncons)
 import Dict exposing (..)
 import Date exposing (..)
 import Streams exposing (..)
-import DOM exposing (target, offsetWidth)
+import DOM exposing (target, offsetWidth, offsetHeight, parentElement)
 
 
 -- Model
@@ -28,7 +28,7 @@ type alias Model =
      , diaporama : Bool
      , loading : Bool
      , zoomed : Bool
-     , vpSize : Maybe (Int,Int)
+     , vpSize : Maybe (Float,Float)
      }
 
 --, button [ ] [i [class "fa fa-spinner fa-spin"] []]
@@ -39,7 +39,7 @@ type alias Picture =
     , date : Maybe Date  
     , caption : Maybe String
     , linkHD : Bool
-    , size : Maybe (Int,Int)
+    , picSize : Maybe (Float,Float)
     }
 
 defPic : Picture
@@ -88,8 +88,8 @@ type Action =
  --| TimeStep
  --| Diaporama
  --| OpenDiapo
- | Zoomed
- | Loaded
+ | Zoomed 
+ | Loaded Dimension
 
 update : Action -> Model -> Model
 update action model =
@@ -106,7 +106,18 @@ update action model =
                  , loading  = not (n == .filename (current (.pictures model)))
                  }
     Zoomed -> {model | zoomed = not (.zoomed model)}
-    Loaded -> { model | loading = False }
+    Loaded { vpWidth
+           , vpHeight 
+           , picWidth 
+           , picHeight 
+           } -> { model | loading = False 
+                , vpSize = Just (vpWidth,vpHeight)
+                , pictures =
+                    let old = current (.pictures model)
+                    in updateCurrent 
+                       {old | picSize = Just (picWidth,picHeight)}
+                       (.pictures model)
+                 }
 
 
 -- View
@@ -140,16 +151,18 @@ lightbox address model =
             , onKey address, tabindex 0, autofocus True
             , id "lightBC"
             ]
-            [ div [ class "picContainer", id "picContainer"]
+            [ p [] [text ((toString (.vpSize model)) ++ (toString (.picSize (current (.pictures model)))))]
+            , div [ class "picContainer", id "picContainer"]
                   
                   [ img [src ("images/" 
                              ++ (.folder model) ++ "/"
                              ++ (.filename currentPic))
-                        , on "load" targetSrc (Signal.message address << (\s -> Loaded))
+                        --, on "load" targetSrc (Signal.message address << (\s -> Loaded))
+                        , on "load" (DOM.target getDimension) (Loaded >> Signal.message address)
                         , classList [("zoomed", .zoomed model)
                                     ,("unzoomed", not (.zoomed model))
                                     ]
-                        , attribute "onload" "adjustMargin()"
+                        --, attribute "onload" "adjustMargin()"
                         , id "lightboxPic"
                         ] []
 
@@ -208,11 +221,11 @@ view address model =
 blockScroll : Action -> Bool
 blockScroll act = 
   case act of 
-    GoTo _ -> True
-    Left   -> True
-    Right  -> True
-    Loaded -> True
-    _      -> False
+    GoTo _   -> True
+    Left     -> True
+    Right    -> True
+    Loaded _ -> True
+    _        -> False
 
 myStyle = 
   style [ ("animation", "fadein 2s")
@@ -225,6 +238,40 @@ onLoad =
 targetSrc : Json.Decoder String
 targetSrc =
   Json.at ["target", "src"] Json.string
+
+type alias Dimension =
+  { vpWidth   : Float
+  , vpHeight  : Float
+  , picWidth  : Float
+  , picHeight : Float
+  } 
+
+getWidthHeight : Json.Decoder (Float,Float)
+getWidthHeight = 
+  Json.object2
+    (\dec1 dec2 ->
+      (dec1, dec2)) offsetWidth offsetHeight
+
+getLightBoxSize : Json.Decoder (Float,Float)
+getLightBoxSize = 
+  parentElement
+   (parentElement
+    (parentElement getWidthHeight))
+
+getDimension : Json.Decoder Dimension
+getDimension =
+  Json.object3
+    (\width height (vpW,vpH) ->
+      { vpWidth  = vpW
+      , vpHeight = vpH
+      , picWidth = width
+      , picHeight = height 
+      })
+    offsetWidth
+    offsetHeight
+    getLightBoxSize
+
+
 
 messageOn : String -> Signal.Address a -> a -> Attribute
 messageOn name addr msg =

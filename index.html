@@ -26,47 +26,47 @@
   //   elmApp.ports.scrollY.send($("#page").scrollTop())
   // })
   
-  function adjustMargin() {
-    var picCon = document.getElementById('picContainer');
-    var lightBC = document.getElementById('lightBC');
-    var pic = document.getElementById('lightboxPic');
+  // function adjustMargin() {
+  //   var picCon = document.getElementById('picContainer');
+  //   var lightBC = document.getElementById('lightBC');
+  //   var pic = document.getElementById('lightboxPic');
     
-    var ratio = pic.offsetWidth / pic.offsetHeight;
+  //   var ratio = pic.offsetWidth / pic.offsetHeight;
     
-    var vpWidth = document.documentElement.clientWidth; 
-    var vpHeight = document.documentElement.clientHeight;
+  //   var vpWidth = document.documentElement.clientWidth; 
+  //   var vpHeight = document.documentElement.clientHeight;
 
-    pic.style.maxHeight = (0.85*vpHeight) + 'px';
-    pic.style.maxWidth  = (0.85*vpHeight) * ratio + 'px';
+  //   pic.style.maxHeight = (0.85*vpHeight) + 'px';
+  //   pic.style.maxWidth  = (0.85*vpHeight) * ratio + 'px';
 
-    var imageWidth = picCon.offsetWidth;
-    var imageHeight = picCon.offsetHeight;
+  //   var imageWidth = picCon.offsetWidth;
+  //   var imageHeight = picCon.offsetHeight;
 
-    lightBC.style.position = 'absolute';
-    lightBC.style.left = (vpWidth - imageWidth)/2 + 'px';
+  //   lightBC.style.position = 'absolute';
+  //   lightBC.style.left = (vpWidth - imageWidth)/2 + 'px';
     
     
-    //console.alert("youpla!");
+  //   //console.alert("youpla!");
 
-     console.log(vpWidth);
-     console.log(imageWidth);  
-     console.log((vpWidth - imageWidth)/2 + 'px');
-    // lightBC.style.left ='0px';
-    // pic.style.top = (vpHeight - imageHeight)/2 + window.pageYOffset + 'px';
-  }
+  //    console.log(vpWidth);
+  //    console.log(imageWidth);  
+  //    console.log((vpWidth - imageWidth)/2 + 'px');
+  //   // lightBC.style.left ='0px';
+  //   // pic.style.top = (vpHeight - imageHeight)/2 + window.pageYOffset + 'px';
+  // }
 
-  window.onload = function (){
-    var page = document.getElementById('page');
+  // window.onload = function (){
+  //   var page = document.getElementById('page');
     
-    sendScroll = function(){
-      elmApp.ports.scrollY.send(page.scrollTop)
-    }
+  //   sendScroll = function(){
+  //     elmApp.ports.scrollY.send(page.scrollTop)
+  // }
 
     page.onscroll = sendScroll
   
   
 
-  }
+  // }
   
   
 

@@ -9,6 +9,7 @@ module Streams ( Stream
                , left
                , right
                , goTo
+               , updateCurrent
                ) where
 
 import List 
@@ -74,6 +75,10 @@ biStream xs def =
 
 current : BiStream a -> a
 current (BiStream v l r) = v
+
+updateCurrent : a -> BiStream a -> BiStream a
+updateCurrent newCurrent (BiStream v l r) = 
+  (BiStream newCurrent l r)
 
 left : BiStream a -> BiStream a
 left (BiStream v l r) =

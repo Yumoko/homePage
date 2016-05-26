@@ -25,86 +25,87 @@ Elm.Streams.make = function (_elm) {
    };
    var current = function (_p1) {    var _p2 = _p1;return _p2._0;};
    var BiStream = F3(function (a,b,c) {    return {ctor: "BiStream",_0: a,_1: b,_2: c};});
-   var next = function (_p3) {    var _p4 = _p3;return _p4._0({ctor: "_Tuple0"});};
-   var toList = F2(function (_p5,n) {
-      var _p6 = _p5;
+   var updateCurrent = F2(function (newCurrent,_p3) {    var _p4 = _p3;return A3(BiStream,newCurrent,_p4._1,_p4._2);});
+   var next = function (_p5) {    var _p6 = _p5;return _p6._0({ctor: "_Tuple0"});};
+   var toList = F2(function (_p7,n) {
+      var _p8 = _p7;
       if (_U.eq(n,0)) return _U.list([]); else {
-            var _p7 = _p6._0({ctor: "_Tuple0"});
-            var v = _p7._0;
-            var s$ = _p7._1;
+            var _p9 = _p8._0({ctor: "_Tuple0"});
+            var v = _p9._0;
+            var s$ = _p9._1;
             return A2($List._op["::"],v,A2(toList,s$,n - 1));
          }
    });
-   var takeNth = F2(function (n,_p8) {
+   var takeNth = F2(function (n,_p10) {
       takeNth: while (true) {
-         var _p9 = _p8;
-         var _p10 = _p9._0;
-         if (_U.eq(n,0)) return $Basics.fst(_p10({ctor: "_Tuple0"})); else {
-               var _v5 = n - 1,_v6 = $Basics.snd(_p10({ctor: "_Tuple0"}));
-               n = _v5;
-               _p8 = _v6;
+         var _p11 = _p10;
+         var _p12 = _p11._0;
+         if (_U.eq(n,0)) return $Basics.fst(_p12({ctor: "_Tuple0"})); else {
+               var _v6 = n - 1,_v7 = $Basics.snd(_p12({ctor: "_Tuple0"}));
+               n = _v6;
+               _p10 = _v7;
                continue takeNth;
             }
       }
    });
    var Stream = function (a) {    return {ctor: "Stream",_0: a};};
    var nats = function () {
-      var f = function (n) {    return Stream(function (_p11) {    var _p12 = _p11;return {ctor: "_Tuple2",_0: n,_1: f(n + 1)};});};
+      var f = function (n) {    return Stream(function (_p13) {    var _p14 = _p13;return {ctor: "_Tuple2",_0: n,_1: f(n + 1)};});};
       return f(1);
    }();
    var cycle = F2(function (xs,def) {
       var dict = $Dict.fromList(tag(xs));
       var l = $List.length(xs);
       var safeGet = function (i) {    return A2($Maybe.withDefault,def,A2($Dict.get,A2($Basics._op["%"],i,l),dict));};
-      var f = function (n) {    return Stream(function (_p13) {    var _p14 = _p13;return {ctor: "_Tuple2",_0: safeGet(n),_1: f(n + 1)};});};
+      var f = function (n) {    return Stream(function (_p15) {    var _p16 = _p15;return {ctor: "_Tuple2",_0: safeGet(n),_1: f(n + 1)};});};
       return f(0);
    });
    var map = F2(function (f,s) {
-      var _p15 = next(s);
-      var v = _p15._0;
-      var s$ = _p15._1;
-      return Stream(function (_p16) {    var _p17 = _p16;return {ctor: "_Tuple2",_0: f(v),_1: A2(map,f,s$)};});
+      var _p17 = next(s);
+      var v = _p17._0;
+      var s$ = _p17._1;
+      return Stream(function (_p18) {    var _p19 = _p18;return {ctor: "_Tuple2",_0: f(v),_1: A2(map,f,s$)};});
    });
    var integers = A3(BiStream,0,A2(map,function (n) {    return 0 - n;},nats),nats);
    var biStream = F2(function (xs,def) {
-      var _p18 = xs;
-      if (_p18.ctor === "[]") {
+      var _p20 = xs;
+      if (_p20.ctor === "[]") {
             return A3(BiStream,def,A2(cycle,_U.list([]),def),A2(cycle,_U.list([]),def));
          } else {
             var dict = $Dict.fromList(tag(xs));
             var l = $List.length(xs);
             var safeGet = function (i) {    return A2($Maybe.withDefault,def,A2($Dict.get,A2($Basics._op["%"],i,l),dict));};
             var rightStr = function (n) {
-               return Stream(function (_p19) {    var _p20 = _p19;return {ctor: "_Tuple2",_0: safeGet(n),_1: rightStr(n + 1)};});
+               return Stream(function (_p21) {    var _p22 = _p21;return {ctor: "_Tuple2",_0: safeGet(n),_1: rightStr(n + 1)};});
             };
             var leftStr = function (n) {
-               return Stream(function (_p21) {    var _p22 = _p21;return {ctor: "_Tuple2",_0: safeGet(l - n),_1: leftStr(n + 1)};});
+               return Stream(function (_p23) {    var _p24 = _p23;return {ctor: "_Tuple2",_0: safeGet(l - n),_1: leftStr(n + 1)};});
             };
-            return A3(BiStream,_p18._0,leftStr(1),rightStr(1));
+            return A3(BiStream,_p20._0,leftStr(1),rightStr(1));
          }
    });
    var test2 = A2(biStream,_U.list(["blibli","blouloub","blublu"]),"");
-   var left = function (_p23) {
-      var _p24 = _p23;
-      var newRight = Stream(function (_p25) {    var _p26 = _p25;return {ctor: "_Tuple2",_0: _p24._0,_1: _p24._2};});
-      var _p27 = next(_p24._1);
-      var newCurrent = _p27._0;
-      var newLeft = _p27._1;
+   var left = function (_p25) {
+      var _p26 = _p25;
+      var newRight = Stream(function (_p27) {    var _p28 = _p27;return {ctor: "_Tuple2",_0: _p26._0,_1: _p26._2};});
+      var _p29 = next(_p26._1);
+      var newCurrent = _p29._0;
+      var newLeft = _p29._1;
       return A3(BiStream,newCurrent,newLeft,newRight);
    };
-   var right = function (_p28) {
-      var _p29 = _p28;
-      var newLeft = Stream(function (_p30) {    var _p31 = _p30;return {ctor: "_Tuple2",_0: _p29._0,_1: _p29._1};});
-      var _p32 = next(_p29._2);
-      var newCurrent = _p32._0;
-      var newRight = _p32._1;
+   var right = function (_p30) {
+      var _p31 = _p30;
+      var newLeft = Stream(function (_p32) {    var _p33 = _p32;return {ctor: "_Tuple2",_0: _p31._0,_1: _p31._1};});
+      var _p34 = next(_p31._2);
+      var newCurrent = _p34._0;
+      var newRight = _p34._1;
       return A3(BiStream,newCurrent,newLeft,newRight);
    };
    var goTo = F2(function (bs,p) {
       goTo: while (true) if (p(current(bs))) return bs; else {
-            var _v17 = right(bs),_v18 = p;
-            bs = _v17;
-            p = _v18;
+            var _v18 = right(bs),_v19 = p;
+            bs = _v18;
+            p = _v19;
             continue goTo;
          }
    });
@@ -117,5 +118,6 @@ Elm.Streams.make = function (_elm) {
                                 ,current: current
                                 ,left: left
                                 ,right: right
-                                ,goTo: goTo};
+                                ,goTo: goTo
+                                ,updateCurrent: updateCurrent};
 };

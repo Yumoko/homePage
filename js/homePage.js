@@ -10893,86 +10893,87 @@ Elm.Streams.make = function (_elm) {
    };
    var current = function (_p1) {    var _p2 = _p1;return _p2._0;};
    var BiStream = F3(function (a,b,c) {    return {ctor: "BiStream",_0: a,_1: b,_2: c};});
-   var next = function (_p3) {    var _p4 = _p3;return _p4._0({ctor: "_Tuple0"});};
-   var toList = F2(function (_p5,n) {
-      var _p6 = _p5;
+   var updateCurrent = F2(function (newCurrent,_p3) {    var _p4 = _p3;return A3(BiStream,newCurrent,_p4._1,_p4._2);});
+   var next = function (_p5) {    var _p6 = _p5;return _p6._0({ctor: "_Tuple0"});};
+   var toList = F2(function (_p7,n) {
+      var _p8 = _p7;
       if (_U.eq(n,0)) return _U.list([]); else {
-            var _p7 = _p6._0({ctor: "_Tuple0"});
-            var v = _p7._0;
-            var s$ = _p7._1;
+            var _p9 = _p8._0({ctor: "_Tuple0"});
+            var v = _p9._0;
+            var s$ = _p9._1;
             return A2($List._op["::"],v,A2(toList,s$,n - 1));
          }
    });
-   var takeNth = F2(function (n,_p8) {
+   var takeNth = F2(function (n,_p10) {
       takeNth: while (true) {
-         var _p9 = _p8;
-         var _p10 = _p9._0;
-         if (_U.eq(n,0)) return $Basics.fst(_p10({ctor: "_Tuple0"})); else {
-               var _v5 = n - 1,_v6 = $Basics.snd(_p10({ctor: "_Tuple0"}));
-               n = _v5;
-               _p8 = _v6;
+         var _p11 = _p10;
+         var _p12 = _p11._0;
+         if (_U.eq(n,0)) return $Basics.fst(_p12({ctor: "_Tuple0"})); else {
+               var _v6 = n - 1,_v7 = $Basics.snd(_p12({ctor: "_Tuple0"}));
+               n = _v6;
+               _p10 = _v7;
                continue takeNth;
             }
       }
    });
    var Stream = function (a) {    return {ctor: "Stream",_0: a};};
    var nats = function () {
-      var f = function (n) {    return Stream(function (_p11) {    var _p12 = _p11;return {ctor: "_Tuple2",_0: n,_1: f(n + 1)};});};
+      var f = function (n) {    return Stream(function (_p13) {    var _p14 = _p13;return {ctor: "_Tuple2",_0: n,_1: f(n + 1)};});};
       return f(1);
    }();
    var cycle = F2(function (xs,def) {
       var dict = $Dict.fromList(tag(xs));
       var l = $List.length(xs);
       var safeGet = function (i) {    return A2($Maybe.withDefault,def,A2($Dict.get,A2($Basics._op["%"],i,l),dict));};
-      var f = function (n) {    return Stream(function (_p13) {    var _p14 = _p13;return {ctor: "_Tuple2",_0: safeGet(n),_1: f(n + 1)};});};
+      var f = function (n) {    return Stream(function (_p15) {    var _p16 = _p15;return {ctor: "_Tuple2",_0: safeGet(n),_1: f(n + 1)};});};
       return f(0);
    });
    var map = F2(function (f,s) {
-      var _p15 = next(s);
-      var v = _p15._0;
-      var s$ = _p15._1;
-      return Stream(function (_p16) {    var _p17 = _p16;return {ctor: "_Tuple2",_0: f(v),_1: A2(map,f,s$)};});
+      var _p17 = next(s);
+      var v = _p17._0;
+      var s$ = _p17._1;
+      return Stream(function (_p18) {    var _p19 = _p18;return {ctor: "_Tuple2",_0: f(v),_1: A2(map,f,s$)};});
    });
    var integers = A3(BiStream,0,A2(map,function (n) {    return 0 - n;},nats),nats);
    var biStream = F2(function (xs,def) {
-      var _p18 = xs;
-      if (_p18.ctor === "[]") {
+      var _p20 = xs;
+      if (_p20.ctor === "[]") {
             return A3(BiStream,def,A2(cycle,_U.list([]),def),A2(cycle,_U.list([]),def));
          } else {
             var dict = $Dict.fromList(tag(xs));
             var l = $List.length(xs);
             var safeGet = function (i) {    return A2($Maybe.withDefault,def,A2($Dict.get,A2($Basics._op["%"],i,l),dict));};
             var rightStr = function (n) {
-               return Stream(function (_p19) {    var _p20 = _p19;return {ctor: "_Tuple2",_0: safeGet(n),_1: rightStr(n + 1)};});
+               return Stream(function (_p21) {    var _p22 = _p21;return {ctor: "_Tuple2",_0: safeGet(n),_1: rightStr(n + 1)};});
             };
             var leftStr = function (n) {
-               return Stream(function (_p21) {    var _p22 = _p21;return {ctor: "_Tuple2",_0: safeGet(l - n),_1: leftStr(n + 1)};});
+               return Stream(function (_p23) {    var _p24 = _p23;return {ctor: "_Tuple2",_0: safeGet(l - n),_1: leftStr(n + 1)};});
             };
-            return A3(BiStream,_p18._0,leftStr(1),rightStr(1));
+            return A3(BiStream,_p20._0,leftStr(1),rightStr(1));
          }
    });
    var test2 = A2(biStream,_U.list(["blibli","blouloub","blublu"]),"");
-   var left = function (_p23) {
-      var _p24 = _p23;
-      var newRight = Stream(function (_p25) {    var _p26 = _p25;return {ctor: "_Tuple2",_0: _p24._0,_1: _p24._2};});
-      var _p27 = next(_p24._1);
-      var newCurrent = _p27._0;
-      var newLeft = _p27._1;
+   var left = function (_p25) {
+      var _p26 = _p25;
+      var newRight = Stream(function (_p27) {    var _p28 = _p27;return {ctor: "_Tuple2",_0: _p26._0,_1: _p26._2};});
+      var _p29 = next(_p26._1);
+      var newCurrent = _p29._0;
+      var newLeft = _p29._1;
       return A3(BiStream,newCurrent,newLeft,newRight);
    };
-   var right = function (_p28) {
-      var _p29 = _p28;
-      var newLeft = Stream(function (_p30) {    var _p31 = _p30;return {ctor: "_Tuple2",_0: _p29._0,_1: _p29._1};});
-      var _p32 = next(_p29._2);
-      var newCurrent = _p32._0;
-      var newRight = _p32._1;
+   var right = function (_p30) {
+      var _p31 = _p30;
+      var newLeft = Stream(function (_p32) {    var _p33 = _p32;return {ctor: "_Tuple2",_0: _p31._0,_1: _p31._1};});
+      var _p34 = next(_p31._2);
+      var newCurrent = _p34._0;
+      var newRight = _p34._1;
       return A3(BiStream,newCurrent,newLeft,newRight);
    };
    var goTo = F2(function (bs,p) {
       goTo: while (true) if (p(current(bs))) return bs; else {
-            var _v17 = right(bs),_v18 = p;
-            bs = _v17;
-            p = _v18;
+            var _v18 = right(bs),_v19 = p;
+            bs = _v18;
+            p = _v19;
             continue goTo;
          }
    });
@@ -10985,7 +10986,8 @@ Elm.Streams.make = function (_elm) {
                                 ,current: current
                                 ,left: left
                                 ,right: right
-                                ,goTo: goTo};
+                                ,goTo: goTo
+                                ,updateCurrent: updateCurrent};
 };
 Elm.Lightbox = Elm.Lightbox || {};
 Elm.Lightbox.make = function (_elm) {
@@ -10994,6 +10996,7 @@ Elm.Lightbox.make = function (_elm) {
    if (_elm.Lightbox.values) return _elm.Lightbox.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $DOM = Elm.DOM.make(_elm),
    $Date = Elm.Date.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -11009,12 +11012,20 @@ Elm.Lightbox.make = function (_elm) {
    var messageOn = F3(function (name,addr,msg) {
       return A3($Html$Events.on,name,$Json$Decode.value,function (_p0) {    return A2($Signal.message,addr,msg);});
    });
+   var getWidthHeight = A3($Json$Decode.object2,F2(function (dec1,dec2) {    return {ctor: "_Tuple2",_0: dec1,_1: dec2};}),$DOM.offsetWidth,$DOM.offsetHeight);
+   var getLightBoxSize = $DOM.parentElement($DOM.parentElement($DOM.parentElement(getWidthHeight)));
+   var getDimension = A4($Json$Decode.object3,
+   F3(function (width,height,_p1) {    var _p2 = _p1;return {vpWidth: _p2._0,vpHeight: _p2._1,picWidth: width,picHeight: height};}),
+   $DOM.offsetWidth,
+   $DOM.offsetHeight,
+   getLightBoxSize);
+   var Dimension = F4(function (a,b,c,d) {    return {vpWidth: a,vpHeight: b,picWidth: c,picHeight: d};});
    var targetSrc = A2($Json$Decode.at,_U.list(["target","src"]),$Json$Decode.string);
    var onLoad = messageOn("load");
    var myStyle = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "animation",_1: "fadein 2s"}]));
    var blockScroll = function (act) {
-      var _p1 = act;
-      switch (_p1.ctor)
+      var _p3 = act;
+      switch (_p3.ctor)
       {case "GoTo": return true;
          case "Left": return true;
          case "Right": return true;
@@ -11022,27 +11033,37 @@ Elm.Lightbox.make = function (_elm) {
          default: return false;}
    };
    var update = F2(function (action,model) {
-      var _p2 = action;
-      switch (_p2.ctor)
+      var _p4 = action;
+      switch (_p4.ctor)
       {case "NoOp": return model;
          case "Left": return _U.update(model,{pictures: $Streams.left(function (_) {    return _.pictures;}(model)),loading: true});
          case "Right": return _U.update(model,{pictures: $Streams.right(function (_) {    return _.pictures;}(model)),loading: true});
          case "Close": return _U.update(model,{display: false,loading: false});
-         case "GoTo": var _p3 = _p2._0;
+         case "GoTo": var _p5 = _p4._0;
            return _U.update(model,
            {pictures: A2($Streams.goTo,
            function (_) {
               return _.pictures;
            }(model),
            function (p) {
-              return _U.eq(function (_) {    return _.filename;}(p),_p3);
+              return _U.eq(function (_) {    return _.filename;}(p),_p5);
            })
            ,display: true
-           ,loading: $Basics.not(_U.eq(_p3,function (_) {    return _.filename;}($Streams.current(function (_) {    return _.pictures;}(model)))))});
+           ,loading: $Basics.not(_U.eq(_p5,function (_) {    return _.filename;}($Streams.current(function (_) {    return _.pictures;}(model)))))});
          case "Zoomed": return _U.update(model,{zoomed: $Basics.not(function (_) {    return _.zoomed;}(model))});
-         default: return _U.update(model,{loading: false});}
+         default: return _U.update(model,
+           {loading: false
+           ,vpSize: $Maybe.Just({ctor: "_Tuple2",_0: _p4._0.vpWidth,_1: _p4._0.vpHeight})
+           ,pictures: function () {
+              var old = $Streams.current(function (_) {    return _.pictures;}(model));
+              return A2($Streams.updateCurrent,
+              _U.update(old,{picSize: $Maybe.Just({ctor: "_Tuple2",_0: _p4._0.picWidth,_1: _p4._0.picHeight})}),
+              function (_) {
+                 return _.pictures;
+              }(model));
+           }()});}
    });
-   var Loaded = {ctor: "Loaded"};
+   var Loaded = function (a) {    return {ctor: "Loaded",_0: a};};
    var Zoomed = {ctor: "Zoomed"};
    var GoTo = function (a) {    return {ctor: "GoTo",_0: a};};
    var thumbs = F2(function (address,model) {
@@ -11082,7 +11103,12 @@ Elm.Lightbox.make = function (_elm) {
               ,$Html$Attributes.tabindex(0)
               ,$Html$Attributes.autofocus(true)
               ,$Html$Attributes.id("lightBC")]),
-      _U.list([A2($Html.div,
+      _U.list([A2($Html.p,
+              _U.list([]),
+              _U.list([$Html.text(A2($Basics._op["++"],
+              $Basics.toString(function (_) {    return _.vpSize;}(model)),
+              $Basics.toString(function (_) {    return _.picSize;}($Streams.current(function (_) {    return _.pictures;}(model))))))]))
+              ,A2($Html.div,
               _U.list([$Html$Attributes.$class("picContainer"),$Html$Attributes.id("picContainer")]),
               _U.list([A2($Html.img,
                       _U.list([$Html$Attributes.src(A2($Basics._op["++"],
@@ -11092,17 +11118,11 @@ Elm.Lightbox.make = function (_elm) {
                                  return _.folder;
                               }(model),
                               A2($Basics._op["++"],"/",function (_) {    return _.filename;}(currentPic)))))
-                              ,A3($Html$Events.on,
-                              "load",
-                              targetSrc,
-                              function (_p4) {
-                                 return A2($Signal.message,address,function (s) {    return Loaded;}(_p4));
-                              })
+                              ,A3($Html$Events.on,"load",$DOM.target(getDimension),function (_p6) {    return A2($Signal.message,address,Loaded(_p6));})
                               ,$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "zoomed",_1: function (_) {    return _.zoomed;}(model)}
                                                                   ,{ctor: "_Tuple2"
                                                                    ,_0: "unzoomed"
                                                                    ,_1: $Basics.not(function (_) {    return _.zoomed;}(model))}]))
-                              ,A2($Html$Attributes.attribute,"onload","adjustMargin()")
                               ,$Html$Attributes.id("lightboxPic")]),
                       _U.list([]))
                       ,A2($Html.div,
@@ -11148,18 +11168,18 @@ Elm.Lightbox.make = function (_elm) {
    var picCaption = F2(function (cs,ps) {
       var addCaption = function (p) {
          var caption = function () {
-            var _p7 = $List.head(A2($List.filter,function (_p5) {    var _p6 = _p5;return _U.eq(function (_) {    return _.filename;}(p),_p6._0);},cs));
-            if (_p7.ctor === "Nothing") {
+            var _p9 = $List.head(A2($List.filter,function (_p7) {    var _p8 = _p7;return _U.eq(function (_) {    return _.filename;}(p),_p8._0);},cs));
+            if (_p9.ctor === "Nothing") {
                   return $Maybe.Nothing;
                } else {
-                  return $Maybe.Just(_p7._0._1);
+                  return $Maybe.Just(_p9._0._1);
                }
          }();
          return _U.update(p,{caption: caption});
       };
       return A2($List.map,addCaption,ps);
    });
-   var Picture = F6(function (a,b,c,d,e,f) {    return {filename: a,author: b,date: c,caption: d,linkHD: e,size: f};});
+   var Picture = F6(function (a,b,c,d,e,f) {    return {filename: a,author: b,date: c,caption: d,linkHD: e,picSize: f};});
    var defPic = A6(Picture,"",$Maybe.Nothing,$Maybe.Nothing,$Maybe.Just(""),false,$Maybe.Nothing);
    var picList = function (n) {
       var go = function (m) {
@@ -11397,7 +11417,7 @@ Elm.HomePage.make = function (_elm) {
            if (_p11.ctor === "Nothing") {
                  return {ctor: "_Tuple2",_0: model,_1: $Effects.none};
               } else {
-                 var eff = function () {    var _p12 = _p13;if (_p12.ctor === "Loaded") {    return sendAdjustMargin;} else {    return $Effects.none;}}();
+                 var eff = function () {    var _p12 = _p13;return $Effects.none;}();
                  var noScroll$ = $Lightbox.blockScroll(_p13);
                  var lightbox$ = A2($Lightbox.update,_p13,_p11._0);
                  return {ctor: "_Tuple2",_0: _U.update(model,{picMap: A3($Dict.insert,state2String(current),lightbox$,picMap),noScroll: noScroll$}),_1: eff};
