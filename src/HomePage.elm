@@ -9,7 +9,7 @@ import List exposing (..)
 import String exposing (words, join, cons, uncons)
 import Char
 import Dict exposing (..)
-import Lightbox exposing (Picture, defPic, picList, Action)
+import Lightbox exposing (Picture, defPic, picList, Action, updateVpSize)
 --import Gallery exposing (..)
 import Time exposing (..)
 import Task exposing (..)
@@ -21,7 +21,7 @@ type alias Model =
   { current  : State
   , picMap   : Dict String (Lightbox.Model)
   , noScroll : Bool
-  , scrollValue : Int 
+  , scrollValue : Int
   }
 
 type State = Menu | Unfolded Category
@@ -39,6 +39,7 @@ initialModel =
                                              , caption  = Just caption
                                     }) xs)
                       folder
+                      initVpSize
   in 
   Model Menu
        (Dict.fromList [ ("Digital", toPics digital "digital")
@@ -60,7 +61,8 @@ type Action =
  | Open Category
  | Close 
  | LightboxAction (Lightbox.Action)
- | ScrollY Int 
+ | ScrollY Int
+ | Resize (Float,Float) 
 
 update : Action -> Model -> (Model, Effects Action) 
 update action model = 
@@ -90,6 +92,10 @@ update action model =
            },eff)
 
     ScrollY v -> ({ model | scrollValue = v }, none)
+    Resize (w,h) -> 
+      let newPicMap = Dict.map (\k v -> updateVpSize (w,h) v) (.picMap model) 
+      in ({ model | picMap = newPicMap }, none)
+
 
 state2String : State -> String  
 state2String state = 
@@ -112,8 +118,18 @@ port locationSearch : String
 
 port scrollY : Signal Int
 
+port vpSize : Signal (Float,Float)
+
+port initVpSize : (Float,Float)
+
 scrollYUpdate : Signal Action
 scrollYUpdate = Signal.map (\v -> ScrollY  v) scrollY
+
+
+vpSizeUpdate : Signal Action
+vpSizeUpdate = Signal.map (\v -> Resize v) vpSize
+
+
 
 -- explanation for this mess at:
 -- http://danielbachler.de/2016/02/26/ports-in-elm.html
@@ -138,7 +154,7 @@ app =
           { init = (initialModel, none)
           , view = view
           , update = update
-          , inputs = [scrollYUpdate]
+          , inputs = [scrollYUpdate, vpSizeUpdate]
           }
 
 main =

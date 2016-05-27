@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/fonts/font-awesome-4.5.0/css/font-awesome.min.css">
 </head>
 
-<body>
+<body onresize="sendLightBoxSize()">
   <a name="top" id="top"></a>
 
   <div id="elm-app"></div>
@@ -18,9 +18,13 @@
 
 <script type="text/javascript">
   var elmDiv = document.getElementById('elm-app');
-  var elmApp = Elm.embed(Elm.HomePage, elmDiv, {locationSearch: window.location.search, scrollY: 0});
   
-  elmApp.ports.requestAdjustMargin.subscribe(adjustMargin);
+  var vpWidth = document.documentElement.clientWidth; 
+  var vpHeight = document.documentElement.clientHeight;
+
+  var elmApp = Elm.embed(Elm.HomePage, elmDiv, {locationSearch: window.location.search, scrollY: 0, vpSize: [vpWidth, vpHeight], initVpSize: [vpWidth, vpHeight]});
+  
+  // elmApp.ports.requestAdjustMargin.subscribe(adjustMargin);
 
   // $('#page').on( 'scroll', function(){
   //   elmApp.ports.scrollY.send($("#page").scrollTop())
@@ -58,11 +62,22 @@
   // window.onload = function (){
   //   var page = document.getElementById('page');
     
-  //   sendScroll = function(){
-  //     elmApp.ports.scrollY.send(page.scrollTop)
-  // }
+  sendScroll = function(){
+    elmApp.ports.scrollY.send(page.scrollTop)
+  }
 
-    page.onscroll = sendScroll
+  sendLightBoxSize = function(){
+    var lb = document.getElementById('lightbox');
+
+    var vpWidth = document.documentElement.clientWidth; 
+    var vpHeight = document.documentElement.clientHeight;
+
+    elmApp.ports.vpSize.send([vpWidth,vpHeight]);
+  }
+
+  page.onscroll = sendScroll
+  window.onorientationchange = sendLightBoxSize
+  // document.getElementById('body').onresize = sendLightBoxSize
   
   
 

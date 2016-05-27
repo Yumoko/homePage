@@ -47,6 +47,20 @@ Elm.HomePage.make = function (_elm) {
    var galleries = _U.list([]);
    var requestAdjustMarginMailbox = $Signal.mailbox("");
    var requestAdjustMargin = Elm.Native.Port.make(_elm).outboundSignal("requestAdjustMargin",function (v) {    return v;},requestAdjustMarginMailbox.signal);
+   var initVpSize = Elm.Native.Port.make(_elm).inbound("initVpSize",
+   "( Float, Float )",
+   function (v) {
+      return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
+                                                           ,_0: typeof v[0] === "number" ? v[0] : _U.badPort("a number",v[0])
+                                                           ,_1: typeof v[1] === "number" ? v[1] : _U.badPort("a number",v[1])} : _U.badPort("an array",v);
+   });
+   var vpSize = Elm.Native.Port.make(_elm).inboundSignal("vpSize",
+   "( Float, Float )",
+   function (v) {
+      return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
+                                                           ,_0: typeof v[0] === "number" ? v[0] : _U.badPort("a number",v[0])
+                                                           ,_1: typeof v[1] === "number" ? v[1] : _U.badPort("a number",v[1])} : _U.badPort("an array",v);
+   });
    var scrollY = Elm.Native.Port.make(_elm).inboundSignal("scrollY",
    "Int",
    function (v) {
@@ -70,6 +84,8 @@ Elm.HomePage.make = function (_elm) {
                default: return "Others";}
          }
    };
+   var Resize = function (a) {    return {ctor: "Resize",_0: a};};
+   var vpSizeUpdate = A2($Signal.map,function (v) {    return Resize(v);},vpSize);
    var ScrollY = function (a) {    return {ctor: "ScrollY",_0: a};};
    var scrollYUpdate = A2($Signal.map,function (v) {    return ScrollY(v);},scrollY);
    var LightboxAction = function (a) {    return {ctor: "LightboxAction",_0: a};};
@@ -164,14 +180,21 @@ Elm.HomePage.make = function (_elm) {
                  var lightbox$ = A2($Lightbox.update,_p13,_p11._0);
                  return {ctor: "_Tuple2",_0: _U.update(model,{picMap: A3($Dict.insert,state2String(current),lightbox$,picMap),noScroll: noScroll$}),_1: eff};
               }
-         default: return {ctor: "_Tuple2",_0: _U.update(model,{scrollValue: _p9._0}),_1: $Effects.none};}
+         case "ScrollY": return {ctor: "_Tuple2",_0: _U.update(model,{scrollValue: _p9._0}),_1: $Effects.none};
+         default: var newPicMap = A2($Dict.map,
+           F2(function (k,v) {    return A2($Lightbox.updateVpSize,{ctor: "_Tuple2",_0: _p9._0._0,_1: _p9._0._1},v);}),
+           function (_) {
+              return _.picMap;
+           }(model));
+           return {ctor: "_Tuple2",_0: _U.update(model,{picMap: newPicMap}),_1: $Effects.none};}
    });
    var Model = F4(function (a,b,c,d) {    return {current: a,picMap: b,noScroll: c,scrollValue: d};});
    var initialModel = function () {
       var toPics = F2(function (xs,folder) {
-         return A2($Lightbox.init,
+         return A3($Lightbox.init,
          A2($List.map,function (_p14) {    var _p15 = _p14;return _U.update($Lightbox.defPic,{filename: _p15._0,caption: $Maybe.Just(_p15._1)});},xs),
-         folder);
+         folder,
+         initVpSize);
       });
       return A4(Model,
       Menu,
@@ -182,7 +205,10 @@ Elm.HomePage.make = function (_elm) {
       false,
       0);
    }();
-   var app = $StartApp.start({init: {ctor: "_Tuple2",_0: initialModel,_1: $Effects.none},view: view,update: update,inputs: _U.list([scrollYUpdate])});
+   var app = $StartApp.start({init: {ctor: "_Tuple2",_0: initialModel,_1: $Effects.none}
+                             ,view: view
+                             ,update: update
+                             ,inputs: _U.list([scrollYUpdate,vpSizeUpdate])});
    var main = app.html;
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",app.tasks);
    return _elm.HomePage.values = {_op: _op
@@ -200,9 +226,11 @@ Elm.HomePage.make = function (_elm) {
                                  ,Close: Close
                                  ,LightboxAction: LightboxAction
                                  ,ScrollY: ScrollY
+                                 ,Resize: Resize
                                  ,update: update
                                  ,state2String: state2String
                                  ,scrollYUpdate: scrollYUpdate
+                                 ,vpSizeUpdate: vpSizeUpdate
                                  ,requestAdjustMarginMailbox: requestAdjustMarginMailbox
                                  ,sendAdjustMargin: sendAdjustMargin
                                  ,app: app

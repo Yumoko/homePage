@@ -5,7 +5,8 @@ module Lightbox (Picture, Model, Action(..)
                 , defPic
                 , picList
                 , picCaption
-                , blockScroll) where
+                , blockScroll
+                , updateVpSize) where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -29,6 +30,7 @@ type alias Model =
      , loading : Bool
      , zoomed : Bool
      , vpSize : Maybe (Float,Float)
+     , defSize : (Float,Float)
      }
 
 --, button [ ] [i [class "fa fa-spinner fa-spin"] []]
@@ -71,10 +73,10 @@ picCaption cs ps =
         
   in List.map addCaption ps
 
-init : List Picture -> String -> Model
-init pics folder = 
+init : List Picture -> String -> (Float,Float) -> Model
+init pics folder vpSize = 
   let nameList = List.map .filename pics
-  in Model (biStream pics defPic) nameList folder False False False False Nothing
+  in Model (biStream pics defPic) nameList folder False False False False (Just vpSize) (0,0)
 
 
 -- Update
@@ -89,35 +91,32 @@ type Action =
  --| Diaporama
  --| OpenDiapo
  | Zoomed 
- | Loaded Dimension
+ | Loaded (Float,Float)
 
 update : Action -> Model -> Model
 update action model =
+  let model' = updateDefSize model in 
   case action of 
     NoOp      -> model
-    Left      -> { model | pictures  = left (.pictures model) , loading = True }
-    Right     -> { model | pictures  = right (.pictures model), loading = True }
+    Left      -> { model' | pictures  = left (.pictures model) , loading = True }
+    Right     -> { model' | pictures  = right (.pictures model), loading = True }
     --Display   -> { model | display   = not (.display model)   , loading = True }
-    Close     -> { model | display   = False, loading = False }
+    Close     -> { model' | display   = False, loading = False }
                         
-    GoTo n    -> { model |
+    GoTo n    -> { model' |
                    pictures = goTo (.pictures model) (\p -> (.filename p) == n)
                  , display  = True
                  , loading  = not (n == .filename (current (.pictures model)))
                  }
     Zoomed -> {model | zoomed = not (.zoomed model)}
-    Loaded { vpWidth
-           , vpHeight 
-           , picWidth 
-           , picHeight 
-           } -> { model | loading = False 
-                , vpSize = Just (vpWidth,vpHeight)
-                , pictures =
-                    let old = current (.pictures model)
-                    in updateCurrent 
-                       {old | picSize = Just (picWidth,picHeight)}
-                       (.pictures model)
-                 }
+    Loaded (picWidth , picHeight) -> 
+             { model | loading = False 
+             , pictures =
+                let old = current (.pictures model)
+                in updateCurrent 
+                   {old | picSize = Just (picWidth,picHeight)}
+                   (.pictures model)
+              }
 
 
 -- View
@@ -143,6 +142,8 @@ lightbox address model =
   in 
   div [ classList [("lightbox",True),("display",(.display model))]
       , onKey address, tabindex 0, autofocus True
+      , id "lightbox"
+      , attribute "onresize" "sendLightBoxSize()"
       ]
       [ div [ classList [("lightbox-content", True)
                         ,("lbzoomed", .zoomed model)
@@ -150,20 +151,24 @@ lightbox address model =
                         ]
             , onKey address, tabindex 0, autofocus True
             , id "lightBC"
+            , centerStyle (.vpSize model) (.picSize currentPic) (.defSize model)
             ]
-            [ p [] [text ((toString (.vpSize model)) ++ (toString (.picSize (current (.pictures model)))))]
-            , div [ class "picContainer", id "picContainer"]
+            [ 
+            --p [] [text ((toString (.vpSize model)) ++ (toString (.picSize (current (.pictures model)))))]
+            --,
+              div [ class "picContainer", id "picContainer"]
                   
                   [ img [src ("images/" 
                              ++ (.folder model) ++ "/"
                              ++ (.filename currentPic))
                         --, on "load" targetSrc (Signal.message address << (\s -> Loaded))
-                        , on "load" (DOM.target getDimension) (Loaded >> Signal.message address)
+                        , on "load" (DOM.target getWidthHeight) (Loaded >> Signal.message address)
                         , classList [("zoomed", .zoomed model)
                                     ,("unzoomed", not (.zoomed model))
                                     ]
                         --, attribute "onload" "adjustMargin()"
                         , id "lightboxPic"
+                        , responsivePic (.vpSize model)
                         ] []
 
                   
@@ -229,7 +234,31 @@ blockScroll act =
 
 myStyle = 
   style [ ("animation", "fadein 2s")
-        ] 
+        ]
+
+responsivePic : Maybe (Float,Float) -> Attribute
+responsivePic vpSize = 
+  case vpSize of 
+    Nothing -> style []
+    Just (vpWidth,vpHeight) -> 
+          style [("max-height",toString (0.85*vpHeight) ++ "px")]
+
+centerStyle vpSize picSize (defWidth, defHeight) = 
+  case vpSize of 
+    Nothing -> style []
+    Just (vpWidth,vpHeight) -> 
+      case picSize of 
+        Nothing -> style [("position","absolute") 
+                ,("left", toString ((vpWidth - defWidth)/2) ++ "px") 
+                ] --style [("left", toString ((vpWidth)/2) ++ "px")]
+        Just (picWidth,picHeight) ->
+          style [("position","absolute") 
+                ,("left", toString ((vpWidth - picWidth)/2) ++ "px") 
+                ]
+
+updateDefSize : Model -> Model
+updateDefSize model =
+  {model | defSize = Maybe.withDefault (800,600) (.picSize (current (.pictures model)))}
 
 onLoad : Signal.Address a -> a -> Attribute
 onLoad =
@@ -239,12 +268,12 @@ targetSrc : Json.Decoder String
 targetSrc =
   Json.at ["target", "src"] Json.string
 
-type alias Dimension =
-  { vpWidth   : Float
-  , vpHeight  : Float
-  , picWidth  : Float
-  , picHeight : Float
-  } 
+--type alias Dimension =
+--  { vpWidth   : Float
+--  , vpHeight  : Float
+--  , picWidth  : Float
+--  , picHeight : Float
+--  } 
 
 getWidthHeight : Json.Decoder (Float,Float)
 getWidthHeight = 
@@ -252,26 +281,27 @@ getWidthHeight =
     (\dec1 dec2 ->
       (dec1, dec2)) offsetWidth offsetHeight
 
-getLightBoxSize : Json.Decoder (Float,Float)
-getLightBoxSize = 
-  parentElement
-   (parentElement
-    (parentElement getWidthHeight))
+--getLightBoxSize : Json.Decoder (Float,Float)
+--getLightBoxSize = 
+--  parentElement
+--   (parentElement
+--    (parentElement getWidthHeight))
 
-getDimension : Json.Decoder Dimension
-getDimension =
-  Json.object3
-    (\width height (vpW,vpH) ->
-      { vpWidth  = vpW
-      , vpHeight = vpH
-      , picWidth = width
-      , picHeight = height 
-      })
-    offsetWidth
-    offsetHeight
-    getLightBoxSize
+--getDimension : Json.Decoder Dimension
+--getDimension =
+--  Json.object3
+--    (\width height (vpW,vpH) ->
+--      { vpWidth  = vpW
+--      , vpHeight = vpH
+--      , picWidth = width
+--      , picHeight = height 
+--      })
+--    offsetWidth
+--    offsetHeight
+--    getLightBoxSize
 
-
+updateVpSize : (Float,Float) -> Model -> Model
+updateVpSize newSize model = {model | vpSize = Just newSize} 
 
 messageOn : String -> Signal.Address a -> a -> Attribute
 messageOn name addr msg =

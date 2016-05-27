@@ -11012,20 +11012,47 @@ Elm.Lightbox.make = function (_elm) {
    var messageOn = F3(function (name,addr,msg) {
       return A3($Html$Events.on,name,$Json$Decode.value,function (_p0) {    return A2($Signal.message,addr,msg);});
    });
+   var updateVpSize = F2(function (newSize,model) {    return _U.update(model,{vpSize: $Maybe.Just(newSize)});});
    var getWidthHeight = A3($Json$Decode.object2,F2(function (dec1,dec2) {    return {ctor: "_Tuple2",_0: dec1,_1: dec2};}),$DOM.offsetWidth,$DOM.offsetHeight);
-   var getLightBoxSize = $DOM.parentElement($DOM.parentElement($DOM.parentElement(getWidthHeight)));
-   var getDimension = A4($Json$Decode.object3,
-   F3(function (width,height,_p1) {    var _p2 = _p1;return {vpWidth: _p2._0,vpHeight: _p2._1,picWidth: width,picHeight: height};}),
-   $DOM.offsetWidth,
-   $DOM.offsetHeight,
-   getLightBoxSize);
-   var Dimension = F4(function (a,b,c,d) {    return {vpWidth: a,vpHeight: b,picWidth: c,picHeight: d};});
    var targetSrc = A2($Json$Decode.at,_U.list(["target","src"]),$Json$Decode.string);
    var onLoad = messageOn("load");
+   var updateDefSize = function (model) {
+      return _U.update(model,
+      {defSize: A2($Maybe.withDefault,
+      {ctor: "_Tuple2",_0: 800,_1: 600},
+      function (_) {
+         return _.picSize;
+      }($Streams.current(function (_) {    return _.pictures;}(model))))});
+   };
+   var centerStyle = F3(function (vpSize,picSize,_p1) {
+      var _p2 = _p1;
+      var _p3 = vpSize;
+      if (_p3.ctor === "Nothing") {
+            return $Html$Attributes.style(_U.list([]));
+         } else {
+            var _p5 = _p3._0._0;
+            var _p4 = picSize;
+            if (_p4.ctor === "Nothing") {
+                  return $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "position",_1: "absolute"}
+                                                        ,{ctor: "_Tuple2",_0: "left",_1: A2($Basics._op["++"],$Basics.toString((_p5 - _p2._0) / 2),"px")}]));
+               } else {
+                  return $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "position",_1: "absolute"}
+                                                        ,{ctor: "_Tuple2",_0: "left",_1: A2($Basics._op["++"],$Basics.toString((_p5 - _p4._0._0) / 2),"px")}]));
+               }
+         }
+   });
+   var responsivePic = function (vpSize) {
+      var _p6 = vpSize;
+      if (_p6.ctor === "Nothing") {
+            return $Html$Attributes.style(_U.list([]));
+         } else {
+            return $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "max-height",_1: A2($Basics._op["++"],$Basics.toString(0.85 * _p6._0._1),"px")}]));
+         }
+   };
    var myStyle = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "animation",_1: "fadein 2s"}]));
    var blockScroll = function (act) {
-      var _p3 = act;
-      switch (_p3.ctor)
+      var _p7 = act;
+      switch (_p7.ctor)
       {case "GoTo": return true;
          case "Left": return true;
          case "Right": return true;
@@ -11033,31 +11060,31 @@ Elm.Lightbox.make = function (_elm) {
          default: return false;}
    };
    var update = F2(function (action,model) {
-      var _p4 = action;
-      switch (_p4.ctor)
+      var model$ = updateDefSize(model);
+      var _p8 = action;
+      switch (_p8.ctor)
       {case "NoOp": return model;
-         case "Left": return _U.update(model,{pictures: $Streams.left(function (_) {    return _.pictures;}(model)),loading: true});
-         case "Right": return _U.update(model,{pictures: $Streams.right(function (_) {    return _.pictures;}(model)),loading: true});
-         case "Close": return _U.update(model,{display: false,loading: false});
-         case "GoTo": var _p5 = _p4._0;
-           return _U.update(model,
+         case "Left": return _U.update(model$,{pictures: $Streams.left(function (_) {    return _.pictures;}(model)),loading: true});
+         case "Right": return _U.update(model$,{pictures: $Streams.right(function (_) {    return _.pictures;}(model)),loading: true});
+         case "Close": return _U.update(model$,{display: false,loading: false});
+         case "GoTo": var _p9 = _p8._0;
+           return _U.update(model$,
            {pictures: A2($Streams.goTo,
            function (_) {
               return _.pictures;
            }(model),
            function (p) {
-              return _U.eq(function (_) {    return _.filename;}(p),_p5);
+              return _U.eq(function (_) {    return _.filename;}(p),_p9);
            })
            ,display: true
-           ,loading: $Basics.not(_U.eq(_p5,function (_) {    return _.filename;}($Streams.current(function (_) {    return _.pictures;}(model)))))});
+           ,loading: $Basics.not(_U.eq(_p9,function (_) {    return _.filename;}($Streams.current(function (_) {    return _.pictures;}(model)))))});
          case "Zoomed": return _U.update(model,{zoomed: $Basics.not(function (_) {    return _.zoomed;}(model))});
          default: return _U.update(model,
            {loading: false
-           ,vpSize: $Maybe.Just({ctor: "_Tuple2",_0: _p4._0.vpWidth,_1: _p4._0.vpHeight})
            ,pictures: function () {
               var old = $Streams.current(function (_) {    return _.pictures;}(model));
               return A2($Streams.updateCurrent,
-              _U.update(old,{picSize: $Maybe.Just({ctor: "_Tuple2",_0: _p4._0.picWidth,_1: _p4._0.picHeight})}),
+              _U.update(old,{picSize: $Maybe.Just({ctor: "_Tuple2",_0: _p8._0._0,_1: _p8._0._1})}),
               function (_) {
                  return _.pictures;
               }(model));
@@ -11094,7 +11121,9 @@ Elm.Lightbox.make = function (_elm) {
                                                   ,{ctor: "_Tuple2",_0: "display",_1: function (_) {    return _.display;}(model)}]))
               ,onKey(address)
               ,$Html$Attributes.tabindex(0)
-              ,$Html$Attributes.autofocus(true)]),
+              ,$Html$Attributes.autofocus(true)
+              ,$Html$Attributes.id("lightbox")
+              ,A2($Html$Attributes.attribute,"onresize","sendLightBoxSize()")]),
       _U.list([A2($Html.div,
       _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "lightbox-content",_1: true}
                                                   ,{ctor: "_Tuple2",_0: "lbzoomed",_1: function (_) {    return _.zoomed;}(model)}
@@ -11102,13 +11131,18 @@ Elm.Lightbox.make = function (_elm) {
               ,onKey(address)
               ,$Html$Attributes.tabindex(0)
               ,$Html$Attributes.autofocus(true)
-              ,$Html$Attributes.id("lightBC")]),
-      _U.list([A2($Html.p,
-              _U.list([]),
-              _U.list([$Html.text(A2($Basics._op["++"],
-              $Basics.toString(function (_) {    return _.vpSize;}(model)),
-              $Basics.toString(function (_) {    return _.picSize;}($Streams.current(function (_) {    return _.pictures;}(model))))))]))
-              ,A2($Html.div,
+              ,$Html$Attributes.id("lightBC")
+              ,A3(centerStyle,
+              function (_) {
+                 return _.vpSize;
+              }(model),
+              function (_) {
+                 return _.picSize;
+              }(currentPic),
+              function (_) {
+                 return _.defSize;
+              }(model))]),
+      _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("picContainer"),$Html$Attributes.id("picContainer")]),
               _U.list([A2($Html.img,
                       _U.list([$Html$Attributes.src(A2($Basics._op["++"],
@@ -11118,12 +11152,13 @@ Elm.Lightbox.make = function (_elm) {
                                  return _.folder;
                               }(model),
                               A2($Basics._op["++"],"/",function (_) {    return _.filename;}(currentPic)))))
-                              ,A3($Html$Events.on,"load",$DOM.target(getDimension),function (_p6) {    return A2($Signal.message,address,Loaded(_p6));})
+                              ,A3($Html$Events.on,"load",$DOM.target(getWidthHeight),function (_p10) {    return A2($Signal.message,address,Loaded(_p10));})
                               ,$Html$Attributes.classList(_U.list([{ctor: "_Tuple2",_0: "zoomed",_1: function (_) {    return _.zoomed;}(model)}
                                                                   ,{ctor: "_Tuple2"
                                                                    ,_0: "unzoomed"
                                                                    ,_1: $Basics.not(function (_) {    return _.zoomed;}(model))}]))
-                              ,$Html$Attributes.id("lightboxPic")]),
+                              ,$Html$Attributes.id("lightboxPic")
+                              ,responsivePic(function (_) {    return _.vpSize;}(model))]),
                       _U.list([]))
                       ,A2($Html.div,
                       _U.list([$Html$Attributes.$class("halfPic"),$Html$Attributes.id("halfPicleft"),A2($Html$Events.onClick,address,Left)]),
@@ -11168,11 +11203,11 @@ Elm.Lightbox.make = function (_elm) {
    var picCaption = F2(function (cs,ps) {
       var addCaption = function (p) {
          var caption = function () {
-            var _p9 = $List.head(A2($List.filter,function (_p7) {    var _p8 = _p7;return _U.eq(function (_) {    return _.filename;}(p),_p8._0);},cs));
-            if (_p9.ctor === "Nothing") {
+            var _p13 = $List.head(A2($List.filter,function (_p11) {    var _p12 = _p11;return _U.eq(function (_) {    return _.filename;}(p),_p12._0);},cs));
+            if (_p13.ctor === "Nothing") {
                   return $Maybe.Nothing;
                } else {
-                  return $Maybe.Just(_p9._0._1);
+                  return $Maybe.Just(_p13._0._1);
                }
          }();
          return _U.update(p,{caption: caption});
@@ -11191,10 +11226,12 @@ Elm.Lightbox.make = function (_elm) {
       };
       return go(n - 1);
    };
-   var Model = F8(function (a,b,c,d,e,f,g,h) {    return {pictures: a,nameList: b,folder: c,display: d,diaporama: e,loading: f,zoomed: g,vpSize: h};});
-   var init = F2(function (pics,folder) {
+   var Model = F9(function (a,b,c,d,e,f,g,h,i) {
+      return {pictures: a,nameList: b,folder: c,display: d,diaporama: e,loading: f,zoomed: g,vpSize: h,defSize: i};
+   });
+   var init = F3(function (pics,folder,vpSize) {
       var nameList = A2($List.map,function (_) {    return _.filename;},pics);
-      return A8(Model,A2($Streams.biStream,pics,defPic),nameList,folder,false,false,false,false,$Maybe.Nothing);
+      return A9(Model,A2($Streams.biStream,pics,defPic),nameList,folder,false,false,false,false,$Maybe.Just(vpSize),{ctor: "_Tuple2",_0: 0,_1: 0});
    });
    return _elm.Lightbox.values = {_op: _op
                                  ,init: init
@@ -11204,6 +11241,7 @@ Elm.Lightbox.make = function (_elm) {
                                  ,picList: picList
                                  ,picCaption: picCaption
                                  ,blockScroll: blockScroll
+                                 ,updateVpSize: updateVpSize
                                  ,Picture: Picture
                                  ,Model: Model
                                  ,NoOp: NoOp
@@ -11305,6 +11343,20 @@ Elm.HomePage.make = function (_elm) {
    var galleries = _U.list([]);
    var requestAdjustMarginMailbox = $Signal.mailbox("");
    var requestAdjustMargin = Elm.Native.Port.make(_elm).outboundSignal("requestAdjustMargin",function (v) {    return v;},requestAdjustMarginMailbox.signal);
+   var initVpSize = Elm.Native.Port.make(_elm).inbound("initVpSize",
+   "( Float, Float )",
+   function (v) {
+      return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
+                                                           ,_0: typeof v[0] === "number" ? v[0] : _U.badPort("a number",v[0])
+                                                           ,_1: typeof v[1] === "number" ? v[1] : _U.badPort("a number",v[1])} : _U.badPort("an array",v);
+   });
+   var vpSize = Elm.Native.Port.make(_elm).inboundSignal("vpSize",
+   "( Float, Float )",
+   function (v) {
+      return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
+                                                           ,_0: typeof v[0] === "number" ? v[0] : _U.badPort("a number",v[0])
+                                                           ,_1: typeof v[1] === "number" ? v[1] : _U.badPort("a number",v[1])} : _U.badPort("an array",v);
+   });
    var scrollY = Elm.Native.Port.make(_elm).inboundSignal("scrollY",
    "Int",
    function (v) {
@@ -11328,6 +11380,8 @@ Elm.HomePage.make = function (_elm) {
                default: return "Others";}
          }
    };
+   var Resize = function (a) {    return {ctor: "Resize",_0: a};};
+   var vpSizeUpdate = A2($Signal.map,function (v) {    return Resize(v);},vpSize);
    var ScrollY = function (a) {    return {ctor: "ScrollY",_0: a};};
    var scrollYUpdate = A2($Signal.map,function (v) {    return ScrollY(v);},scrollY);
    var LightboxAction = function (a) {    return {ctor: "LightboxAction",_0: a};};
@@ -11422,14 +11476,21 @@ Elm.HomePage.make = function (_elm) {
                  var lightbox$ = A2($Lightbox.update,_p13,_p11._0);
                  return {ctor: "_Tuple2",_0: _U.update(model,{picMap: A3($Dict.insert,state2String(current),lightbox$,picMap),noScroll: noScroll$}),_1: eff};
               }
-         default: return {ctor: "_Tuple2",_0: _U.update(model,{scrollValue: _p9._0}),_1: $Effects.none};}
+         case "ScrollY": return {ctor: "_Tuple2",_0: _U.update(model,{scrollValue: _p9._0}),_1: $Effects.none};
+         default: var newPicMap = A2($Dict.map,
+           F2(function (k,v) {    return A2($Lightbox.updateVpSize,{ctor: "_Tuple2",_0: _p9._0._0,_1: _p9._0._1},v);}),
+           function (_) {
+              return _.picMap;
+           }(model));
+           return {ctor: "_Tuple2",_0: _U.update(model,{picMap: newPicMap}),_1: $Effects.none};}
    });
    var Model = F4(function (a,b,c,d) {    return {current: a,picMap: b,noScroll: c,scrollValue: d};});
    var initialModel = function () {
       var toPics = F2(function (xs,folder) {
-         return A2($Lightbox.init,
+         return A3($Lightbox.init,
          A2($List.map,function (_p14) {    var _p15 = _p14;return _U.update($Lightbox.defPic,{filename: _p15._0,caption: $Maybe.Just(_p15._1)});},xs),
-         folder);
+         folder,
+         initVpSize);
       });
       return A4(Model,
       Menu,
@@ -11440,7 +11501,10 @@ Elm.HomePage.make = function (_elm) {
       false,
       0);
    }();
-   var app = $StartApp.start({init: {ctor: "_Tuple2",_0: initialModel,_1: $Effects.none},view: view,update: update,inputs: _U.list([scrollYUpdate])});
+   var app = $StartApp.start({init: {ctor: "_Tuple2",_0: initialModel,_1: $Effects.none}
+                             ,view: view
+                             ,update: update
+                             ,inputs: _U.list([scrollYUpdate,vpSizeUpdate])});
    var main = app.html;
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",app.tasks);
    return _elm.HomePage.values = {_op: _op
@@ -11458,9 +11522,11 @@ Elm.HomePage.make = function (_elm) {
                                  ,Close: Close
                                  ,LightboxAction: LightboxAction
                                  ,ScrollY: ScrollY
+                                 ,Resize: Resize
                                  ,update: update
                                  ,state2String: state2String
                                  ,scrollYUpdate: scrollYUpdate
+                                 ,vpSizeUpdate: vpSizeUpdate
                                  ,requestAdjustMarginMailbox: requestAdjustMarginMailbox
                                  ,sendAdjustMargin: sendAdjustMargin
                                  ,app: app
