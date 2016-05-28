@@ -11046,7 +11046,7 @@ Elm.Lightbox.make = function (_elm) {
       if (_p6.ctor === "Nothing") {
             return $Html$Attributes.style(_U.list([]));
          } else {
-            return $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "max-height",_1: A2($Basics._op["++"],$Basics.toString(0.85 * _p6._0._1),"px")}]));
+            return $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "max-height",_1: A2($Basics._op["++"],$Basics.toString(0.82 * _p6._0._1),"px")}]));
          }
    };
    var myStyle = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "animation",_1: "fadein 2s"}]));
@@ -11160,6 +11160,26 @@ Elm.Lightbox.make = function (_elm) {
                               ,$Html$Attributes.id("lightboxPic")
                               ,responsivePic(function (_) {    return _.vpSize;}(model))]),
                       _U.list([]))
+                      ,A2($Html.p,
+                      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "position",_1: "absolute"}
+                                                              ,{ctor: "_Tuple2",_0: "left",_1: "0px"}
+                                                              ,{ctor: "_Tuple2",_0: "top",_1: "0px"}
+                                                              ,{ctor: "_Tuple2",_0: "background-color",_1: "grey"}]))]),
+                      _U.list([$Html.text($Basics.toString(function (_) {    return _.vpSize;}(model)))]))
+                      ,A2($Html.p,
+                      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "position",_1: "absolute"}
+                                                              ,{ctor: "_Tuple2",_0: "left",_1: "0px"}
+                                                              ,{ctor: "_Tuple2",_0: "top",_1: "22px"}
+                                                              ,{ctor: "_Tuple2",_0: "background-color",_1: "grey"}]))]),
+                      _U.list([$Html.text($Basics.toString(function (_) {
+                         return _.picSize;
+                      }($Streams.current(function (_) {    return _.pictures;}(model)))))]))
+                      ,A2($Html.p,
+                      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "position",_1: "absolute"}
+                                                              ,{ctor: "_Tuple2",_0: "left",_1: "0px"}
+                                                              ,{ctor: "_Tuple2",_0: "top",_1: "44px"}
+                                                              ,{ctor: "_Tuple2",_0: "background-color",_1: "grey"}]))]),
+                      _U.list([$Html.text($Basics.toString(function (_) {    return _.defSize;}(model)))]))
                       ,A2($Html.div,
                       _U.list([$Html$Attributes.$class("halfPic"),$Html$Attributes.id("halfPicleft"),A2($Html$Events.onClick,address,Left)]),
                       _U.list([A2($Html.span,_U.list([$Html$Attributes.$class("noselect")]),_U.list([$Html.text("<<")]))]))

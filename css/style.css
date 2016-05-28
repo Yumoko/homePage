@@ -265,6 +265,7 @@ footer {
 }*/
 
 .lightbox-content{
+  display: block;
   position: absolute;
   /*padding-bottom: 10%;*/
   padding-top: 2%;

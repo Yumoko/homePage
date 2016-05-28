@@ -171,6 +171,27 @@ lightbox address model =
                         , responsivePic (.vpSize model)
                         ] []
 
+                  , p [ style [ ("position","absolute")
+                              , ("left","0px")
+                              , ("top","0px")
+                              , ("background-color","grey")
+                              ]
+                      ] 
+                      [text (toString (.vpSize model))]
+                  , p [ style [ ("position","absolute")
+                              , ("left","0px")
+                              , ("top","22px")
+                              , ("background-color","grey")
+                              ]
+                      ] 
+                      [text (toString (.picSize (current (.pictures model))))]
+                  , p [ style [ ("position","absolute")
+                              , ("left","0px")
+                              , ("top","44px")
+                              , ("background-color","grey")
+                              ]
+                      ] 
+                      [text (toString (.defSize model))]
                   
                   , div [ class "halfPic"
                         , id "halfPicleft"
@@ -241,7 +262,7 @@ responsivePic vpSize =
   case vpSize of 
     Nothing -> style []
     Just (vpWidth,vpHeight) -> 
-          style [("max-height",toString (0.85*vpHeight) ++ "px")]
+          style [("max-height",toString (0.82*vpHeight) ++ "px")]
 
 centerStyle vpSize picSize (defWidth, defHeight) = 
   case vpSize of 
