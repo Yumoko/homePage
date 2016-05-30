@@ -1,0 +1,120 @@
+Elm.Yamana = Elm.Yamana || {};
+Elm.Yamana.make = function (_elm) {
+   "use strict";
+   _elm.Yamana = _elm.Yamana || {};
+   if (_elm.Yamana.values) return _elm.Yamana.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $StartApp$Simple = Elm.StartApp.Simple.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var toScale = F2(function (width,xs) {
+      var wScale = 1000 / $Basics.toFloat(width);
+      var ratio = 1000 / 771;
+      var hScale = 771 / ($Basics.toFloat(width) / ratio);
+      var helper = function (xs) {
+         var _p0 = xs;
+         if (_p0.ctor === "[]") {
+               return _U.list([]);
+            } else {
+               if (_p0._1.ctor === "::") {
+                     var h$ = $Basics.toFloat(_p0._1._0) / hScale;
+                     var w$ = $Basics.toFloat(_p0._0) / wScale;
+                     return A2($List._op["::"],$Basics.round(w$),A2($List._op["::"],$Basics.round(h$),helper(_p0._1._1)));
+                  } else {
+                     return _U.list([]);
+                  }
+            }
+      };
+      return A2($List.map,function (c) {    return _U.update(c,{points: helper(function (_) {    return _.points;}(c))});},xs);
+   });
+   var Coords = F3(function (a,b,c) {    return {id: a,points: b,name: c};});
+   var pts = _U.list([A3(Coords,1,_U.list([158,519,284,530,275,609,147,594]),"green house")
+                     ,A3(Coords,2,_U.list([212,403,206,456,235,455,261,458,258,433,269,405]),"mandala garden")]);
+   var update = F2(function (action,model) {
+      var _p1 = action;
+      if (_p1.ctor === "NoOp") {
+            return model;
+         } else {
+            return _U.update(model,{currentArea: _p1._0});
+         }
+   });
+   var Area = function (a) {    return {ctor: "Area",_0: a};};
+   var coordsToArea = F2(function (addr,poly) {
+      var coords$ = A2($String.join,",",A2($List.map,$Basics.toString,function (_) {    return _.points;}(poly)));
+      return A3($Html.node,
+      "area",
+      _U.list([$Html$Attributes.title(function (_) {    return _.name;}(poly))
+              ,$Html$Attributes.shape("poly")
+              ,$Html$Attributes.coords(coords$)
+              ,A2($Html$Events.onClick,addr,Area(function (_) {    return _.id;}(poly)))]),
+      _U.list([]));
+   });
+   var coordsToAreas = function (addr) {    return $List.map(coordsToArea(addr));};
+   var coordsToSVGs = F3(function (addr,coords,dw) {
+      var hStr = $Basics.toString($Basics.round($Basics.toFloat(dw) / (1000 / 771)));
+      var wStr = $Basics.toString(dw);
+      var poly = F2(function (addr,_p2) {
+         var _p3 = _p2;
+         var _p4 = _p3.id;
+         return A2($Svg.polygon,
+         _U.list([$Svg$Attributes.points(A2($String.join,",",A2($List.map,$Basics.toString,_p3.points)))
+                 ,A2($Html$Events.onClick,addr,Area(_p4 + 1))
+                 ,A2($Html$Events.onMouseOver,addr,Area(_p4))
+                 ,$Svg$Attributes.fill("blue")]),
+         _U.list([A3($Html.node,"title",_U.list([]),_U.list([$Svg.text(_p3.name)]))]));
+      });
+      var coords$ = A2(toScale,dw,coords);
+      return A2($Svg.svg,
+      _U.list([$Svg$Attributes.width(wStr)
+              ,$Svg$Attributes.height(hStr)
+              ,$Svg$Attributes.viewBox(A2($Basics._op["++"],"0 0 ",A2($Basics._op["++"],wStr,A2($Basics._op["++"]," ",hStr))))]),
+      A2($List.map,poly(addr),coords$));
+   });
+   var NoOp = {ctor: "NoOp"};
+   var view = F2(function (address,model) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.id("mapApp")]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.id("mapContainer")]),
+              _U.list([A2($Html.img,
+                      _U.list([$Html$Attributes.src("mapPrototype.png")
+                              ,$Html$Attributes.usemap("#imgmap2016528221332")
+                              ,$Html$Attributes.width(1000)
+                              ,$Html$Attributes.height(771)]),
+                      _U.list([]))
+                      ,A3(coordsToSVGs,address,pts,function (_) {    return _.desiredWidth;}(model))]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.id("sideTab")]),
+              _U.list([A2($Html.p,_U.list([]),_U.list([$Html.text($Basics.toString(function (_) {    return _.currentArea;}(model)))]))]))]));
+   });
+   var Model = F2(function (a,b) {    return {currentArea: a,desiredWidth: b};});
+   var initialModel = A2(Model,0,800);
+   var main = $StartApp$Simple.start({model: initialModel,view: view,update: update});
+   var subMenu = _U.list([]);
+   return _elm.Yamana.values = {_op: _op
+                               ,subMenu: subMenu
+                               ,Model: Model
+                               ,initialModel: initialModel
+                               ,view: view
+                               ,NoOp: NoOp
+                               ,Area: Area
+                               ,update: update
+                               ,main: main
+                               ,Coords: Coords
+                               ,coordsToAreas: coordsToAreas
+                               ,coordsToArea: coordsToArea
+                               ,coordsToSVGs: coordsToSVGs
+                               ,toScale: toScale
+                               ,pts: pts};
+};
